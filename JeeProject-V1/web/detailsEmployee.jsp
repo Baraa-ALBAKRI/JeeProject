@@ -21,52 +21,46 @@
         <form action =  "Controller">
             <div class="form-group col-md-8">
                 <label for="lastNameInput">Nom</label>
-                <input type="text" class="form-control" name="lastNameInput">
+                <input type="text" class="form-control" name="lastNameInput" value ="${employe.lastName}">
             </div>
             <div class="form-group col-md-8">
                 <label for="firstNameInput">Prénom</label>
-                <input type="text" class="form-control" name="firstNameInput">
+                <input type="text" class="form-control" name="firstNameInput" value ="${employe.firstName}">
             </div>
             <div class="form-group col-md-8">
                 <label for="homePhoneInput">Tel dom</label>
-                <input type="tel" class="form-control" name="homePhoneInput">
+                <input type="tel" class="form-control" name="homePhoneInput" value="${employe.homePhone}">
             </div>
             <div class="form-group col-md-8">
                 <label for="mobilePhoneInput">Tel mob</label>
-                <input type="tel" class="form-control" name="mobilePhoneInput">
+                <input type="tel" class="form-control" name="mobilePhoneInput" value="${employe.mobilePhone}">
             </div>
             <div class="form-group col-md-8">
                 <label for="workPhoneInput">Tel pro</label>
-                <input type="tel" class="form-control" name="workPhoneInput">
+                <input type="tel" class="form-control" name="workPhoneInput" value="${employe.workPhone}">
             </div>
             <div class="form-row" style="margin-left: 0.5%;">
                 <div class="form-group col-md-4">
                     <label for="addressInput">Adresse</label>
-                    <input type="text" class="form-control" name="addressInput">
+                    <input type="text" class="form-control" name="addressInput" value="${employe.address}">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="zipInput">Code Postal</label>
-                    <input type="text" class="form-control" name="zipInput">
+                    <input type="text" class="form-control" name="zipInput" value="${employe.zipCode}">
                 </div>
             </div>
             <div class="form-row" style="margin-left: 0.5%;">
                 <div class="form-group col-md-4">
                     <label for="cityInput">Ville</label>
-                    <input type="text" class="form-control" name="cityInput">
+                    <input type="text" class="form-control" name="cityInput" value="${employe.city}">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="mailInput">Adresse mail</label>
-                    <input type="mail" class="form-control" name="mailInput">
+                    <input type="mail" class="form-control" name="mailInput" value="${employe.mail}">
                 </div>
             </div>
             <div style="margin-left: 56%">
-                <%
-            String buttonValue = (String)session.getAttribute("buttonValue");
-            if(buttonValue != null)
-            {
-                out.println("<input type=\"submit\" class=\"btn btn-primary\" name = \"button\" value = \"" + buttonValue + "\">");
-            }
-            %>
+                <input type="submit" class="btn btn-primary" name = "button" value = "${buttonValue}">
                 <input type="submit" class="btn" name = "button" value = "Voir liste">
             </div>
         </form>
