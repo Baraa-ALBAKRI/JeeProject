@@ -28,7 +28,7 @@
             employeesList = loggedUser.getEmployeesList(db);
             
             if(employeesList != null && employeesList.size()>0){
-                out.println(session.getAttribute("deleteStatus") != null ? session.getAttribute("deleteStatus") : "");
+                out.println(session.getAttribute("selectStatus") != null ? session.getAttribute("selectStatus") : "");
                 
                 out.println("<form action = \"Controller\">");
                     out.println("<table>");

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import lsi.m1.models.DBActions;
+import lsi.m1.models.EmployeeBean;
 import lsi.m1.models.LoggedAdmin;
 import lsi.m1.models.LoggedEmployee;
 import static lsi.m1.utils.Constants.*;
@@ -58,22 +59,50 @@ public class Controller extends HttpServlet {
                     case "Supprimer":
                         
                         if(loggedAdmin.deleteEmployee(id, db) > 0){
-                            session.setAttribute("deleteStatus","Suppression réussie");
+                            session.setAttribute("selectStatus","Suppression réussie");
                         }
                         else{
-                            session.setAttribute("deleteStatus","Veuillez sélectionner un employé.");
+                            session.setAttribute("selectStatus","Veuillez sélectionner un employé.");
                         }
                         
                         response.sendRedirect("employeesList.jsp");
                         break;
                     case "Details":
-                        session.setAttribute("buttonValue", "Modifier");
-                        response.sendRedirect("detailsEmployee.jsp");
+                        if(id > -1){
+                            EmployeeBean e = new EmployeeBean();
+                            
+                            e.setId(id);
+                            e.setLastName(request.getParameter("lastNameInput"));
+                            e.setFirstName(request.getParameter("firstNameInput"));
+                            e.setHomePhone(request.getParameter("homePhoneInput"));
+                            e.setMobilePhone(request.getParameter("mobilePhoneInput"));
+                            e.setWorkPhone(request.getParameter("workPhoneInput"));
+                            e.setAddress(request.getParameter("addressInput"));
+                            e.setZipCode(request.getParameter("zipInput"));
+                            e.setCity(request.getParameter("cityInputInput"));
+                            e.setMail(request.getParameter("mailInput"));
+                            
+                            session.setAttribute("buttonValue", "Modifier");
+                            session.setAttribute("employe", e);
+                            
+                            response.sendRedirect("detailsEmployee.jsp");
+                        }
+                        else{
+                            session.setAttribute("selectStatus","Veuillez sélectionner un employé.");
+                            response.sendRedirect("employeesList.jsp");
+                        }
+                        
                         break;
                     case "Ajouter":
                         session.setAttribute("buttonValue", "Ajouter");
                         response.sendRedirect("detailsEmployee.jsp");
                         break;
+                        
+                    case "Voir liste" :
+                        response.sendRedirect("employeesList.jsp");
+                        break;
+                    default :
+                        out.println("[" + action + "]");
                 }
             } else {
                 String login;

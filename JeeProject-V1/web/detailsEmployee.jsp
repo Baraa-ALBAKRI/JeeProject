@@ -18,31 +18,31 @@
 
     </head>
     <body>
-        <form>
+        <form action =  "Controller">
             <div class="form-group col-md-8">
                 <label for="lastNameInput">Nom</label>
-                <input type="text" class="form-control" id="lastNameInput">
+                <input type="text" class="form-control" name="lastNameInput">
             </div>
             <div class="form-group col-md-8">
                 <label for="firstNameInput">Prénom</label>
-                <input type="text" class="form-control" id="firstNameInput">
+                <input type="text" class="form-control" name="firstNameInput">
             </div>
             <div class="form-group col-md-8">
                 <label for="homePhoneInput">Tel dom</label>
-                <input type="tel" class="form-control" id="homePhoneInput">
+                <input type="tel" class="form-control" name="homePhoneInput">
             </div>
             <div class="form-group col-md-8">
                 <label for="mobilePhoneInput">Tel mob</label>
-                <input type="tel" class="form-control" id="mobilePhoneInput">
+                <input type="tel" class="form-control" name="mobilePhoneInput">
             </div>
             <div class="form-group col-md-8">
                 <label for="workPhoneInput">Tel pro</label>
-                <input type="tel" class="form-control" id="workPhoneInput">
+                <input type="tel" class="form-control" name="workPhoneInput">
             </div>
             <div class="form-row" style="margin-left: 0.5%;">
                 <div class="form-group col-md-4">
                     <label for="addressInput">Adresse</label>
-                    <input type="text" class="form-control" id="addressInput">
+                    <input type="text" class="form-control" name="addressInput">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="zipInput">Code Postal</label>
@@ -52,7 +52,7 @@
             <div class="form-row" style="margin-left: 0.5%;">
                 <div class="form-group col-md-4">
                     <label for="cityInput">Ville</label>
-                    <input type="text" class="form-control" id="cityInput">
+                    <input type="text" class="form-control" name="cityInput">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="mailInput">Adresse mail</label>
@@ -64,11 +64,12 @@
             String buttonValue = (String)session.getAttribute("buttonValue");
             if(buttonValue != null)
             {
-                out.println("<input type=\"submit\" class=\"btn btn-primary\" value = \"" + buttonValue + "\">");
+                out.println("<input type=\"submit\" class=\"btn btn-primary\" name = \"button\" value = \"" + buttonValue + "\">");
             }
             %>
-                <input type="submit" class="btn" value = "Voir liste">
+                <input type="submit" class="btn" name = "button" value = "Voir liste">
             </div>
         </form>
+            <%out.println(session.getAttribute("employe"));%>
     </body>
 </html>
