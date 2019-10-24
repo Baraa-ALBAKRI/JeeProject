@@ -60,8 +60,14 @@
                 </div>
             </div>
             <div style="margin-left: 56%">
-                <button type="submit" class="btn btn-primary">Modifier</button>
-                <button type="submit" class="btn">Voir liste</button>
+                <%
+            String buttonValue = (String)session.getAttribute("buttonValue");
+            if(buttonValue != null)
+            {
+                out.println("<button type=\"submit\" class=\"btn btn-primary\" value = \"sendDetails\">" + buttonValue + "</button>");
+            }
+            %>
+                <button type="submit" class="btn" value = \"showList\">Voir liste</button>
             </div>
         </form>
     </body>

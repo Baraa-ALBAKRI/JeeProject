@@ -68,10 +68,12 @@ public class Controller extends HttpServlet {
                         
                         break;
                     case "Details":
+                        session.setAttribute("buttonValue", "Modifier");
                         response.sendRedirect("detailsEmployee.jsp");
                         break;
                     case "Ajouter":
-                        out.println(action);
+                        session.setAttribute("buttonValue", "Ajouter");
+                        response.sendRedirect("detailsEmployee.jsp");
                         break;
                 }
             } else {
