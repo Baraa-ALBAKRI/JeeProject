@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import lsi.m1.models.LoggedAdmin;
+import lsi.m1.models.LoggedEmployee;
 import static lsi.m1.utils.Constants.*;/**
  *
  * @author nox
@@ -34,22 +36,37 @@ public class Controller extends HttpServlet {
             session = request.getSession();
             String login;
             String password;
-            boolean isAdmin;
-            boolean isEmployee;
+            boolean isConnected;
             
+            isConnected = false;
             login = request.getParameter(FRM_LOGIN);
             password = request.getParameter(FRM_PASSWORD);
-            isAdmin = false;
-            isEmployee = false;
+            
             
             if(login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))){
-                isAdmin = true;
+                session.setAttribute("loggedUser", new LoggedAdmin());
+                session.setAttribute("errKey", "");
+                isConnected = true;
             }
             else if(login.equals(getServletContext().getInitParameter("loginEmployee"))  && password.equals(getServletContext().getInitParameter("passwordEmployee"))){
-                isEmployee = true;
+                session.setAttribute("loggedUser", new LoggedEmployee());
+                session.setAttribute("errKey", "");
+                isConnected = true;
+            }
+            else
+            {
+               session.setAttribute("loginLevel", "");
+               session.setAttribute("errKey", "Erreur d'identification.");
             }
             
+            if(isConnected){
+                response.sendRedirect("employeesList.jsp");
+            }
+            else{
+                response.sendRedirect("accueil.jsp");
+            }
             
+
         }
     }
 

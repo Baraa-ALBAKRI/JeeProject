@@ -5,7 +5,7 @@
  */
 package lsi.m1.models;
 
-import java.util.List;
+
 
 /**
  *
@@ -22,10 +22,7 @@ public class EmployeeBean {
     private String zipCode;
     private String city;
     private String mail;
-    
-    public List<EmployeeBean> getEmployeesList(DBActions db){
-        return db.getEmployees();
-    }
+  
     
     public String getLastName() {
         return lastName;

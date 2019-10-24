@@ -9,7 +9,11 @@ package lsi.m1.models;
  *
  * @author nox
  */
-public class AdminBean extends EmployeeBean {
+public class LoggedAdmin extends LoggedEmployee {
+
+    public LoggedAdmin() {
+        super.setAccessLevel("admin");
+    }
     public boolean deleteEmployee(int id){
         return true;
     }
