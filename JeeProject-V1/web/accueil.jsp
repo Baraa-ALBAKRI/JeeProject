@@ -16,14 +16,14 @@
         <c:if  test="${!empty errKey}">
             <span style="color:red">  ${ errKey} </span><br/>
         </c:if>
-            <form name="myFrm" action="Controleur" class="form-signin">
+            <form name="myFrm" action="Controller" class="form-signin">
 
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <label for="inputName" class="sr-only">Name</label>
-            <input type="text" id="inputName" class="form-control" placeholder="Name" required autofocus>
+            <input type="text" id="inputName" class="form-control" name = "loginForm" placeholder="Name" required autofocus>
             <br>
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <input type="password" id="inputPassword" class="form-control" name = "passwordForm" placeholder="Password" required>
             
             <button class="btn btn-lg btn-primary btn-block" type="submit">Connect</button>
             

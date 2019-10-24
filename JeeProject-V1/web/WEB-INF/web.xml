@@ -5,13 +5,29 @@
             accueil.jsp
         </welcome-file>
     </welcome-file-list>
+    <context-param>
+        <param-name>loginAdmin</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+    <context-param>
+        <param-name>passwordAdmin</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+    <context-param>
+        <param-name>loginEmployee</param-name>
+        <param-value>empl</param-value>
+    </context-param>
+    <context-param>
+        <param-name>passwordEmployee</param-name>
+        <param-value>empl</param-value>
+    </context-param>
     <servlet>
-        <servlet-name>Controleur</servlet-name>
-        <servlet-class>lsi.m1.ctrl.Controleur</servlet-class>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>lsi.m1.controller.Controller</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Controleur</servlet-name>
-        <url-pattern>/Controleur</url-pattern>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>/Controller</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
