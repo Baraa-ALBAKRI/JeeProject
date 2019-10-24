@@ -52,26 +52,37 @@ public class Controller extends HttpServlet {
                 id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
                 LoggedAdmin loggedAdmin;
                 loggedAdmin = (LoggedAdmin) session.getAttribute("loggedUser");
-                   
-                session.setAttribute("deleteStatus", "");
-                
+
+                session.setAttribute("selectStatus", "");
+
                 switch (action) {
                     case "Supprimer":
                         
-                        if(loggedAdmin.deleteEmployee(id, db) > 0){
-                            session.setAttribute("selectStatus","Suppression réussie");
+                        if (loggedAdmin.deleteEmployee(id, db) > 0) {
+                            session.setAttribute("selectStatus", "Suppression réussie");
+                        } else {
+                            session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                         }
-                        else{
-                            session.setAttribute("selectStatus","Veuillez sélectionner un employé.");
-                        }
-                        
+
                         response.sendRedirect("employeesList.jsp");
                         break;
                     case "Details":
-                        if(id > -1){
+                        if (id > -1) {
+
+                            session.setAttribute("buttonValue", "Modifier");
+                            session.setAttribute("employe", loggedAdmin.getEmployee(id, db));
+
+                            response.sendRedirect("detailsEmployee.jsp");
+                        } else {
+                            session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                            response.sendRedirect("employeesList.jsp");
+                        }
+
+                        break;
+                    case "Ajouter":
+                        if(session.getAttribute("buttonValue").equals("Ajouter")){
                             EmployeeBean e = new EmployeeBean();
-                            
-                            e.setId(id);
+
                             e.setLastName(request.getParameter("lastNameInput"));
                             e.setFirstName(request.getParameter("firstNameInput"));
                             e.setHomePhone(request.getParameter("homePhoneInput"));
@@ -79,29 +90,38 @@ public class Controller extends HttpServlet {
                             e.setWorkPhone(request.getParameter("workPhoneInput"));
                             e.setAddress(request.getParameter("addressInput"));
                             e.setZipCode(request.getParameter("zipInput"));
-                            e.setCity(request.getParameter("cityInputInput"));
+                            e.setCity(request.getParameter("cityInput"));
                             e.setMail(request.getParameter("mailInput"));
                             
-                            session.setAttribute("buttonValue", "Modifier");
-                            session.setAttribute("employe", e);
-                            
-                            response.sendRedirect("detailsEmployee.jsp");
-                        }
-                        else{
-                            session.setAttribute("selectStatus","Veuillez sélectionner un employé.");
+                            loggedAdmin.addEmployee(e,db);
                             response.sendRedirect("employeesList.jsp");
                         }
-                        
+                        else{
+                            session.setAttribute("buttonValue","Ajouter");
+                            response.sendRedirect("detailsEmployee.jsp");
+                        }
+                           
                         break;
-                    case "Ajouter":
-                        session.setAttribute("buttonValue", "Ajouter");
-                        response.sendRedirect("detailsEmployee.jsp");
-                        break;
-                        
-                    case "Voir liste" :
+                    case "Modifier":
+                        EmployeeBean e = new EmployeeBean();
+                        EmployeeBean oldE = (EmployeeBean)session.getAttribute("employe");
+                        e.setId(oldE.getId());
+                        e.setLastName(request.getParameter("lastNameInput"));
+                        e.setFirstName(request.getParameter("firstNameInput"));
+                        e.setHomePhone(request.getParameter("homePhoneInput"));
+                        e.setMobilePhone(request.getParameter("mobilePhoneInput"));
+                        e.setWorkPhone(request.getParameter("workPhoneInput"));
+                        e.setAddress(request.getParameter("addressInput"));
+                        e.setZipCode(request.getParameter("zipInput"));
+                        e.setCity(request.getParameter("cityInput"));
+                        e.setMail(request.getParameter("mailInput"));
+                        loggedAdmin.modifyEmployee(e,db);
                         response.sendRedirect("employeesList.jsp");
                         break;
-                    default :
+                    case "Voir liste":
+                        response.sendRedirect("employeesList.jsp");
+                        break;
+                    default:
                         out.println("[" + action + "]");
                 }
             } else {

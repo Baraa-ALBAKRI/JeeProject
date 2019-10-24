@@ -14,15 +14,47 @@ public class LoggedAdmin extends LoggedEmployee {
     public LoggedAdmin() {
         super.setAccessLevel("admin");
     }
-    public int deleteEmployee(int id, DBActions db){
+
+    public int deleteEmployee(int id, DBActions db) {
         return db.executeStatement("DELETE FROM EMPLOYES WHERE ID = " + id);
     }
     
-    public boolean addEmployee(EmployeeBean e){
-        return true;
+    public EmployeeBean getEmployee(int id, DBActions db){
+        return db.getEmployee(id);
     }
-    
-    public boolean modifyEmployee(EmployeeBean e){
-        return true;
+
+    public int addEmployee(EmployeeBean e, DBActions db) {
+        String req;
+
+        req = "INSERT INTO EMPLOYES(NOM,PRENOM,TELDOM,TELPORT,TELPRO,ADRESSE,CODEPOSTAL,VILLE,EMAIL) VALUES"
+                + "('" + e.getLastName() + "',"
+                + "'" + e.getFirstName() + "',"
+                + "'" + e.getHomePhone() + "',"
+                + "'" + e.getMobilePhone() + "',"
+                + "'" + e.getWorkPhone() + "',"
+                + "'" + e.getAddress() + "',"
+                + "'" + e.getZipCode() + "',"
+                + "'" + e.getCity() + "',"
+                + "'" + e.getMail() + "')";
+        
+        //return req;
+        return db.executeStatement(req);
+    }
+
+    public int modifyEmployee(EmployeeBean e, DBActions db) {
+        String req;
+
+        req = "UPDATE EMPLOYES SET NOM = '" + e.getLastName() + "',"
+                + "PRENOM = '" + e.getFirstName() + "',"
+                + "TELDOM = '" + e.getHomePhone() + "',"
+                + "TELPORT = '" + e.getMobilePhone() + "',"
+                + "TELPRO = '" + e.getWorkPhone() + "',"
+                + "ADRESSE = '" + e.getAddress() + "',"
+                + "CODEPOSTAL ='" + e.getZipCode() + "',"
+                + "VILLE = '" + e.getCity() + "',"
+                + "EMAIL = '" + e.getMail() + "'"
+                + " WHERE ID = " + e.getId();
+
+        return db.executeStatement(req);
     }
 }

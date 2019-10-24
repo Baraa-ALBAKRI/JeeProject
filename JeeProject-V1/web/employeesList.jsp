@@ -15,6 +15,7 @@
     </head>
     <body>
         <%
+            session.setAttribute("buttonValue", "");
             LoggedEmployee loggedUser = (LoggedEmployee)session.getAttribute("loggedUser");
             List<EmployeeBean> employeesList;
             DBActions db;

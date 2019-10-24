@@ -70,6 +70,6 @@
                 <input type="submit" class="btn" name = "button" value = "Voir liste">
             </div>
         </form>
-            <%out.println(session.getAttribute("employe"));%>
+           
     </body>
 </html>
