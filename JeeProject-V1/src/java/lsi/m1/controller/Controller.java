@@ -98,6 +98,7 @@ public class Controller extends HttpServlet {
                         }
                         else{
                             session.setAttribute("buttonValue","Ajouter");
+                            session.setAttribute("employe",null);
                             response.sendRedirect("detailsEmployee.jsp");
                         }
                            
