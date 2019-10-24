@@ -64,10 +64,10 @@
             String buttonValue = (String)session.getAttribute("buttonValue");
             if(buttonValue != null)
             {
-                out.println("<button type=\"submit\" class=\"btn btn-primary\" value = \"sendDetails\">" + buttonValue + "</button>");
+                out.println("<input type=\"submit\" class=\"btn btn-primary\" value = \"" + buttonValue + "\">");
             }
             %>
-                <button type="submit" class="btn" value = \"showList\">Voir liste</button>
+                <input type="submit" class="btn" value = "Voir liste">
             </div>
         </form>
     </body>

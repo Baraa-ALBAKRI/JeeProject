@@ -65,7 +65,6 @@ public class Controller extends HttpServlet {
                         }
                         
                         response.sendRedirect("employeesList.jsp");
-                        
                         break;
                     case "Details":
                         session.setAttribute("buttonValue", "Modifier");
