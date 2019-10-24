@@ -14,8 +14,8 @@ public class LoggedAdmin extends LoggedEmployee {
     public LoggedAdmin() {
         super.setAccessLevel("admin");
     }
-    public boolean deleteEmployee(int id){
-        return true;
+    public int deleteEmployee(int id, DBActions db){
+        return db.executeStatement("DELETE FROM EMPLOYES WHERE ID = " + id);
     }
     
     public boolean addEmployee(EmployeeBean e){

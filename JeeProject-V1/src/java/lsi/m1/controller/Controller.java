@@ -12,14 +12,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import lsi.m1.models.DBActions;
 import lsi.m1.models.LoggedAdmin;
 import lsi.m1.models.LoggedEmployee;
-import static lsi.m1.utils.Constants.*;/**
+import static lsi.m1.utils.Constants.*;
+
+/**
  *
  * @author nox
  */
 public class Controller extends HttpServlet {
-    HttpSession session; 
+
+    HttpSession session;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,39 +38,70 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+
+            int id;
+            String action;
+            DBActions db;
+
+            action = request.getParameter("button");
+
             session = request.getSession();
-            String login;
-            String password;
-            boolean isConnected;
-            
-            isConnected = false;
-            login = request.getParameter(FRM_LOGIN);
-            password = request.getParameter(FRM_PASSWORD);
-            
-            
-            if(login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))){
-                session.setAttribute("loggedUser", new LoggedAdmin());
-                session.setAttribute("errKey", "");
-                isConnected = true;
+            if (action != null) {
+                db = new DBActions();
+                id = Integer.parseInt(request.getParameter("selector"));
+                LoggedAdmin loggedAdmin;
+                loggedAdmin = (LoggedAdmin) session.getAttribute("loggedUser");
+                   
+                session.setAttribute("deleteStatus", "");
+                
+                switch (action) {
+                    case "Supprimer":
+                        
+                        if(loggedAdmin.deleteEmployee(id, db) > 0){
+                            session.setAttribute("deleteStatus","Suppression réussie");
+                        }
+                        else{
+                            session.setAttribute("deleteStatus","Suppression réussie");
+                        }
+                        
+                        response.sendRedirect("employeesList.jsp");
+                        
+                        break;
+                    case "Details":
+                        out.println(action);
+                        break;
+                    case "Ajouter":
+                        out.println(action);
+                        break;
+                }
+            } else {
+                String login;
+                String password;
+                boolean isConnected;
+                out.println("1");
+                isConnected = false;
+                login = request.getParameter(FRM_LOGIN);
+                password = request.getParameter(FRM_PASSWORD);
+
+                if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
+                    session.setAttribute("loggedUser", new LoggedAdmin());
+                    session.setAttribute("errKey", "");
+                    isConnected = true;
+                } else if (login.equals(getServletContext().getInitParameter("loginEmployee")) && password.equals(getServletContext().getInitParameter("passwordEmployee"))) {
+                    session.setAttribute("loggedUser", new LoggedEmployee());
+                    session.setAttribute("errKey", "");
+                    isConnected = true;
+                } else {
+                    session.setAttribute("loginLevel", "");
+                    session.setAttribute("errKey", "Erreur d'identification.");
+                }
+
+                if (isConnected) {
+                    response.sendRedirect("employeesList.jsp");
+                } else {
+                    response.sendRedirect("accueil.jsp");
+                }
             }
-            else if(login.equals(getServletContext().getInitParameter("loginEmployee"))  && password.equals(getServletContext().getInitParameter("passwordEmployee"))){
-                session.setAttribute("loggedUser", new LoggedEmployee());
-                session.setAttribute("errKey", "");
-                isConnected = true;
-            }
-            else
-            {
-               session.setAttribute("loginLevel", "");
-               session.setAttribute("errKey", "Erreur d'identification.");
-            }
-            
-            if(isConnected){
-                response.sendRedirect("employeesList.jsp");
-            }
-            else{
-                response.sendRedirect("accueil.jsp");
-            }
-            
 
         }
     }

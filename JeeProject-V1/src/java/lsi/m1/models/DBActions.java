@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static lsi.m1.utils.Constants.*;
 /**
  *
@@ -17,9 +19,9 @@ import static lsi.m1.utils.Constants.*;
  */
 public class DBActions {
     
-    Connection conn;
-    Statement stmt;
-    ResultSet rs;
+    private Connection conn;
+    private Statement stmt;
+    private ResultSet rs;
     
     public DBActions(){
         try {
@@ -75,5 +77,15 @@ public class DBActions {
             System.out.println(e.getMessage());
         }
         return employeesList;
+    }
+    
+    public int executeStatement(String req){
+        try {
+            stmt = getStatement();
+            return stmt.executeUpdate(req);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBActions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 }

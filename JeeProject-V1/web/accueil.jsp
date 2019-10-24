@@ -14,7 +14,7 @@
     </head>
     <body>
         
-            <form name="myFrm" action="Controller" class="form-signin">
+            <form method = "POST" name="myFrm" action="Controller" class="form-signin">
 
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <label for="inputName" class="sr-only">Name</label>
@@ -28,7 +28,7 @@
                 <span style="color:red">  ${ errKey} </span><br/>
             </c:if>
             <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>
-        </form>
+            </form>
         
         
     </body>
