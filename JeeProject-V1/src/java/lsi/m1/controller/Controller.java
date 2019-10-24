@@ -48,7 +48,7 @@ public class Controller extends HttpServlet {
             session = request.getSession();
             if (action != null) {
                 db = new DBActions();
-                id = Integer.parseInt(request.getParameter("selector"));
+                id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
                 LoggedAdmin loggedAdmin;
                 loggedAdmin = (LoggedAdmin) session.getAttribute("loggedUser");
                    
@@ -61,14 +61,14 @@ public class Controller extends HttpServlet {
                             session.setAttribute("deleteStatus","Suppression réussie");
                         }
                         else{
-                            session.setAttribute("deleteStatus","Suppression réussie");
+                            session.setAttribute("deleteStatus","Veuillez sélectionner un employé.");
                         }
                         
                         response.sendRedirect("employeesList.jsp");
                         
                         break;
                     case "Details":
-                        out.println(action);
+                        response.sendRedirect("detailsEmployee.jsp");
                         break;
                     case "Ajouter":
                         out.println(action);
@@ -78,7 +78,6 @@ public class Controller extends HttpServlet {
                 String login;
                 String password;
                 boolean isConnected;
-                out.println("1");
                 isConnected = false;
                 login = request.getParameter(FRM_LOGIN);
                 password = request.getParameter(FRM_PASSWORD);

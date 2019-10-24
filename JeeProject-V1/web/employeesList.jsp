@@ -80,7 +80,7 @@
                         for(EmployeeBean e : employeesList){
                             out.println("<tr>");
                                 out.println("<td>");
-                                out.println("<input type = \"radio\" name = \"selector\" required value = \"" + e.getId()+"\">");
+                                out.println("<input type = \"radio\" name = \"selector\" value = \"" + e.getId()+"\">");
                                 out.println("</td>");
 
                                 out.println("<td>");
