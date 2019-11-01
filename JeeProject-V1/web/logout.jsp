@@ -14,7 +14,8 @@
     <body>
         <p>Déconnexion en cours...</p>
         <p>Vous allez être redirigé(e) vers la page d'accueil.</p>
+        <c:set scope="session" var="button" value="Deconnexion" />
         <c:remove var="loggedUser" scope="session" />
-        <c:redirect url = "employeesList.jsp"/>
+        <c:redirect url = "Controller"/>
     </body>
 </html>
