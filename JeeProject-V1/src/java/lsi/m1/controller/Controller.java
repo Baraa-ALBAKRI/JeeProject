@@ -60,7 +60,7 @@ public class Controller extends HttpServlet {
                 } 
                 if(loggedUser == null){
                     session.setAttribute("loginLevel", "");
-                    session.setAttribute("errKey", "Erreur d'identification.");
+                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
                     response.sendRedirect("accueil.jsp");
                 }
                 else {
@@ -75,13 +75,12 @@ public class Controller extends HttpServlet {
                     int id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
                     LoggedAdmin loggedAdmin = (LoggedAdmin) loggedUser;
                     session.setAttribute("selectStatus", "");
-                    session.setAttribute("selectStatus", "");
 
                     switch (action) {
                         case "Supprimer":
 
                             if (loggedAdmin.deleteEmployee(id, db) > 0) {
-                                session.setAttribute("selectStatus", "Suppression réussie");
+                                session.setAttribute("selectStatus", "Suppression réussie.");
                             } else {
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                             }

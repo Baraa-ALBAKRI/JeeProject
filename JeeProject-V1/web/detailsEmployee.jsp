@@ -18,6 +18,13 @@
 
     </head>
     <body>
+        <span>
+            Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.
+            <a href="logout.jsp" class="btn btn-info btn-lg">
+              <span class="glyphicon glyphicon-off"></span> Déconnexion 
+            </a>
+        </span>
+        
         <form action =  "Controller">
             <div class="form-group col-md-8">
                 <label for="lastNameInput">Nom</label>

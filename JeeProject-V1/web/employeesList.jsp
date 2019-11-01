@@ -14,6 +14,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Employees List</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     </head>
     <body>
 
@@ -22,13 +26,26 @@
             <c:redirect url = "accueil.jsp"/>
         </c:if>
 
-        <%
-            DBActions db = new DBActions();
-            session.setAttribute("employeeList", db.getEmployees());
-        %>
+        <span>
+            Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.
+            <a href="logout.jsp" class="btn btn-info btn-lg">
+              <span class="glyphicon glyphicon-off"></span> Déconnexion 
+            </a>
+        </span>
+        
+        <c:choose>
+            <c:when test="${selectStatus != null && selectStatus == 'Suppression réussie.'}">
+                <span>Suppression réussie.</span>
+            </c:when>
+            <c:when test="${selectStatus != null && selectStatus == 'Veuillez sélectionner un employé.'}">
+                <span>Veuillez sélectionner un employé.</span>
+            </c:when>
+        </c:choose>
+        
+        
 
         <c:choose>
-            <c:when test = "${employeeList == null || employeeList.size() == 0}">
+            <c:when test = "${employeesList == null || employeesList.size() == 0}">
                 Nous devons recruter !
             </c:when>
             <c:otherwise>
@@ -49,7 +66,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${employeeList}" var="employee">
+                            <c:forEach items="${employeesList}" var="employee">
                                 <tr>
                                     <td><input type = "radio" name = "selector" value = "${employee.getId()}"></td>
                                     <td>${employee.getLastName()}</td>
