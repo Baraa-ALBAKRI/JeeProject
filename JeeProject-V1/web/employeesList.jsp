@@ -21,14 +21,14 @@
         <c:if test="${loggedUser == null}">
             <c:redirect url = "accueil.jsp"/>
         </c:if>
-        
+
         <%
             DBActions db = new DBActions();
             session.setAttribute("employeeList", db.getEmployees());
         %>
-        
+
         <c:choose>
-            <c:when test = "${employeeList == null || employeeList.size() > 0}">
+            <c:when test = "${employeeList == null || employeeList.size() == 0}">
                 Nous devons recruter !
             </c:when>
             <c:otherwise>
@@ -66,7 +66,7 @@
                             </c:forEach>
                         </tbody>
                     </table>
-                    <c:if test="${loggedUser.getAccesLevel() == 'admin'}">
+                    <c:if test="${loggedUser.getAccessLevel() == 'admin'}">
                         <input type = "submit" name = "button" value = "Supprimer">
                         <input type = "submit" name = "button" value = "Details">
                         <input type = "submit" name = "button" value = "Ajouter">
