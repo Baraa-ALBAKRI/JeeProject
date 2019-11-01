@@ -7,6 +7,8 @@ package lsi.m1.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -144,7 +146,12 @@ public class Controller extends HttpServlet {
                             response.sendRedirect("employeesList.jsp");
                             break;
                         case "Deconnexion":
-                            response.sendRedirect("employeesList.jsp");
+                            Enumeration<String> sessionsAttributeNames =  session.getAttributeNames();
+                            
+                            while(sessionsAttributeNames.hasMoreElements()){
+                                session.removeAttribute(sessionsAttributeNames.nextElement());
+                            }
+                            
                             response.sendRedirect("logout.jsp");
                             break;
                         default:
