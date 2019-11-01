@@ -39,50 +39,98 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
-            int id;
-            String action;
-            DBActions db;
-
-            action = request.getParameter("button");
-
+            
             session = request.getSession();
-            if (action != null) {
-                db = new DBActions();
-                id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
-                LoggedAdmin loggedAdmin;
-                loggedAdmin = (LoggedAdmin) session.getAttribute("loggedUser");
+            DBActions db = new DBActions();
+            LoggedEmployee loggedUser = (LoggedAdmin) session.getAttribute("loggedUser");
+            if(loggedUser == null){
+                String login = request.getParameter(FRM_LOGIN);
+                String password = request.getParameter(FRM_PASSWORD);
+                if(login == null && password == null){
+                    response.sendRedirect("accueil.jsp");
+                }
+                else if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
+                    loggedUser = new LoggedAdmin();
+                    session.setAttribute("loggedUser", loggedUser);
+                    session.setAttribute("errKey", "");
+                } else if (login.equals(getServletContext().getInitParameter("loginEmployee")) && password.equals(getServletContext().getInitParameter("passwordEmployee"))) {
+                    loggedUser = new LoggedEmployee();
+                    session.setAttribute("loggedUser", loggedUser);
+                    session.setAttribute("errKey", "");
+                } 
+                if(loggedUser == null){
+                    session.setAttribute("loginLevel", "");
+                    session.setAttribute("errKey", "Erreur d'identification.");
+                    response.sendRedirect("accueil.jsp");
+                }
+                else {
+                    session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                    response.sendRedirect("employeesList.jsp");
+                }
+            }
+            //Not acceil page
+            else{
+                String action = request.getParameter("button");
+                if (action != null) {
+                    int id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
+                    LoggedAdmin loggedAdmin = (LoggedAdmin) loggedUser;
+                    session.setAttribute("selectStatus", "");
+                    session.setAttribute("selectStatus", "");
 
-                session.setAttribute("selectStatus", "");
+                    switch (action) {
+                        case "Supprimer":
 
-                switch (action) {
-                    case "Supprimer":
-                        
-                        if (loggedAdmin.deleteEmployee(id, db) > 0) {
-                            session.setAttribute("selectStatus", "Suppression réussie");
-                        } else {
-                            session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
-                        }
-
-                        response.sendRedirect("employeesList.jsp");
-                        break;
-                    case "Details":
-                        if (id > -1) {
-
-                            session.setAttribute("buttonValue", "Modifier");
-                            session.setAttribute("employe", loggedAdmin.getEmployee(id, db));
-
-                            response.sendRedirect("detailsEmployee.jsp");
-                        } else {
-                            session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                            if (loggedAdmin.deleteEmployee(id, db) > 0) {
+                                session.setAttribute("selectStatus", "Suppression réussie");
+                            } else {
+                                session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                            }
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
-                        }
+                            break;
+                        case "Details":
+                            if (id > -1) {
 
-                        break;
-                    case "Ajouter":
-                        if(session.getAttribute("buttonValue").equals("Ajouter")){
+                                session.setAttribute("buttonValue", "Modifier");
+                                session.setAttribute("employe", loggedAdmin.getEmployee(id, db));
+
+                                response.sendRedirect("detailsEmployee.jsp");
+                            } else {
+                                session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                                session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                                response.sendRedirect("employeesList.jsp");
+                            }
+
+                            break;
+                        case "Ajouter":
+                            if(session.getAttribute("buttonValue").equals("Ajouter")){
+                                EmployeeBean e = new EmployeeBean();
+
+                                e.setLastName(request.getParameter("lastNameInput"));
+                                e.setFirstName(request.getParameter("firstNameInput"));
+                                e.setHomePhone(request.getParameter("homePhoneInput"));
+                                e.setMobilePhone(request.getParameter("mobilePhoneInput"));
+                                e.setWorkPhone(request.getParameter("workPhoneInput"));
+                                e.setAddress(request.getParameter("addressInput"));
+                                e.setZipCode(request.getParameter("zipInput"));
+                                e.setCity(request.getParameter("cityInput"));
+                                e.setMail(request.getParameter("mailInput"));
+
+                                loggedAdmin.addEmployee(e,db);
+                                session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                                response.sendRedirect("employeesList.jsp");
+                            }
+                            else{
+                                session.setAttribute("buttonValue","Ajouter");
+                                session.setAttribute("employe",null);
+                                response.sendRedirect("detailsEmployee.jsp");
+                            }
+
+                            break;
+                        case "Modifier":
                             EmployeeBean e = new EmployeeBean();
-
+                            EmployeeBean oldE = (EmployeeBean)session.getAttribute("employe");
+                            e.setId(oldE.getId());
                             e.setLastName(request.getParameter("lastNameInput"));
                             e.setFirstName(request.getParameter("firstNameInput"));
                             e.setHomePhone(request.getParameter("homePhoneInput"));
@@ -92,67 +140,19 @@ public class Controller extends HttpServlet {
                             e.setZipCode(request.getParameter("zipInput"));
                             e.setCity(request.getParameter("cityInput"));
                             e.setMail(request.getParameter("mailInput"));
-                            
-                            loggedAdmin.addEmployee(e,db);
+                            loggedAdmin.modifyEmployee(e,db);
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
-                        }
-                        else{
-                            session.setAttribute("buttonValue","Ajouter");
-                            session.setAttribute("employe",null);
-                            response.sendRedirect("detailsEmployee.jsp");
-                        }
-                           
-                        break;
-                    case "Modifier":
-                        EmployeeBean e = new EmployeeBean();
-                        EmployeeBean oldE = (EmployeeBean)session.getAttribute("employe");
-                        e.setId(oldE.getId());
-                        e.setLastName(request.getParameter("lastNameInput"));
-                        e.setFirstName(request.getParameter("firstNameInput"));
-                        e.setHomePhone(request.getParameter("homePhoneInput"));
-                        e.setMobilePhone(request.getParameter("mobilePhoneInput"));
-                        e.setWorkPhone(request.getParameter("workPhoneInput"));
-                        e.setAddress(request.getParameter("addressInput"));
-                        e.setZipCode(request.getParameter("zipInput"));
-                        e.setCity(request.getParameter("cityInput"));
-                        e.setMail(request.getParameter("mailInput"));
-                        loggedAdmin.modifyEmployee(e,db);
-                        response.sendRedirect("employeesList.jsp");
-                        break;
-                    case "Voir liste":
-                        response.sendRedirect("employeesList.jsp");
-                        break;
-                    default:
-                        out.println("[" + action + "]");
+                            break;
+                        case "Voir liste":
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                            response.sendRedirect("employeesList.jsp");
+                            break;
+                        default:
+                            out.println("[" + action + "]");
+                    }
+                    }
                 }
-            } else {
-                String login;
-                String password;
-                boolean isConnected;
-                isConnected = false;
-                login = request.getParameter(FRM_LOGIN);
-                password = request.getParameter(FRM_PASSWORD);
-
-                if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
-                    session.setAttribute("loggedUser", new LoggedAdmin());
-                    session.setAttribute("errKey", "");
-                    isConnected = true;
-                } else if (login.equals(getServletContext().getInitParameter("loginEmployee")) && password.equals(getServletContext().getInitParameter("passwordEmployee"))) {
-                    session.setAttribute("loggedUser", new LoggedEmployee());
-                    session.setAttribute("errKey", "");
-                    isConnected = true;
-                } else {
-                    session.setAttribute("loginLevel", "");
-                    session.setAttribute("errKey", "Erreur d'identification.");
-                }
-
-                if (isConnected) {
-                    response.sendRedirect("employeesList.jsp");
-                } else {
-                    response.sendRedirect("accueil.jsp");
-                }
-            }
-
         }
     }
 
