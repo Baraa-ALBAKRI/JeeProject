@@ -18,9 +18,19 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <style>
+            td{
+                border:1px solid #000;
+            }
+
+            tr td:last-child{
+                width:1%;
+                white-space:nowrap;
+            }
+        </style>
     </head>
     <body>
-
+        <div style="padding: 15px;">
         <c:set var="buttonValue" value="" scope="session" />
         <c:if test="${loggedUser == null}">
             <c:redirect url = "accueil.jsp"/>
@@ -50,7 +60,7 @@
             </c:when>
             <c:otherwise>
                 <form action = "Controller">
-                    <table>
+                    <table style="width: 100%;">
                         <thead>
                             <tr>
                                 <th>SEL</th>
@@ -69,7 +79,6 @@
                             <c:forEach items="${employeesList}" var="employee">
                                 <tr>
                                     <td><input type = "radio" name = "selector" value = "${employee.getId()}"></td>
-                                    <td>${employee.getLastName()}</td>
                                     <td>${employee.getLastName()}</td>
                                     <td>${employee.getFirstName()}</td>
                                     <td>${employee.getHomePhone()}</td>
@@ -91,5 +100,6 @@
                 </form>
             </c:otherwise>
         </c:choose>
+                </div>
     </body>
 </html>
