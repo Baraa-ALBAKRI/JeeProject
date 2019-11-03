@@ -9,8 +9,7 @@
 <html>
     <head>
         <title>Modify</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
@@ -18,7 +17,7 @@
 
     </head>
     <body>
-        
+        <div style="padding: 15px;">
         
         <span>
             <form action = "Controller">
@@ -28,7 +27,13 @@
                 </button>
             </form>
         </span>
-                <br>
+        <br>
+        
+        <c:choose>
+            <c:when test="${selectStatus != null}">
+                <span style="color:${selectStatusColor};">${selectStatus}</span>
+            </c:when>
+        </c:choose>
         
         
         <form action =  "Controller">
@@ -77,6 +82,6 @@
                 <input type="submit" class="btn" name = "button" value = "Voir liste">
             </div>
         </form>
-           
+        </div>
     </body>
 </html>
