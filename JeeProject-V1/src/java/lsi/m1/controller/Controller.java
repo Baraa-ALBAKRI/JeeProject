@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import lsi.m1.models.DBActions;
+import lsi.m1.data.DBActions;
 import lsi.m1.models.EmployeeBean;
 import lsi.m1.models.LoggedAdmin;
 import lsi.m1.models.LoggedEmployee;
@@ -44,12 +44,13 @@ public class Controller extends HttpServlet {
 
             session = request.getSession();
             DBActions db = new DBActions();
-            LoggedEmployee loggedUser = (LoggedAdmin) session.getAttribute("loggedUser");
+            LoggedEmployee loggedUser = (LoggedEmployee) session.getAttribute("loggedUser");
             if (loggedUser == null) {
                 String login = request.getParameter(FRM_LOGIN);
                 String password = request.getParameter(FRM_PASSWORD);
-                if (login == null && password == null) {
-                    response.sendRedirect("accueil.jsp");
+                if (login == null || password == null) {
+                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
+                    response.sendRedirect("login.jsp");
                 } else if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
                     loggedUser = new LoggedAdmin();
                     session.setAttribute("loggedUser", loggedUser);
@@ -59,15 +60,10 @@ public class Controller extends HttpServlet {
                     session.setAttribute("loggedUser", loggedUser);
                     session.setAttribute("errKey", "");
                 }
-                if (loggedUser == null) {
-                    session.setAttribute("loginLevel", "");
-                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
-                    response.sendRedirect("accueil.jsp");
-                } else {
-                    session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
-                    response.sendRedirect("employeesList.jsp");
-                }
+                session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                response.sendRedirect("employeesList.jsp");
             } //Not acceil page
+            
             else {
                 String action = request.getParameter("button");
                 if (action != null) {
@@ -76,31 +72,40 @@ public class Controller extends HttpServlet {
                     session.setAttribute("selectStatus", "");
 
                     switch (action) {
+                        
                         case "Supprimer":
-
-                            if (loggedAdmin.deleteEmployee(id, db) > 0) {
+                            
+                            if (id > -1) {
+                                loggedAdmin.deleteEmployee(id, db);
                                 session.setAttribute("selectStatus", "Suppression réussie.");
                             } else {
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                             }
+                            
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
+                            
                             break;
+                            
                         case "Details":
+                            
                             if (id > -1) {
-
                                 session.setAttribute("buttonValue", "Modifier");
                                 session.setAttribute("employe", loggedAdmin.getEmployee(id, db));
 
-                                response.sendRedirect("detailsEmployee.jsp");
-                            } else {
+                                response.sendRedirect("employeeDetails.jsp");
+                            }
+                            
+                            else {
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                                 response.sendRedirect("employeesList.jsp");
                             }
 
                             break;
+                            
                         case "Ajouter":
+                            
                             if (session.getAttribute("buttonValue").equals("Ajouter")) {
                                 EmployeeBean e = new EmployeeBean();
 
@@ -115,16 +120,20 @@ public class Controller extends HttpServlet {
                                 e.setMail(request.getParameter("mailInput"));
 
                                 loggedAdmin.addEmployee(e, db);
+                                 session.setAttribute("buttonValue", "");
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                                 response.sendRedirect("employeesList.jsp");
-                            } else {
+                            } 
+                            
+                            else {
                                 session.setAttribute("buttonValue", "Ajouter");
                                 session.setAttribute("employe", null);
-                                response.sendRedirect("detailsEmployee.jsp");
+                                response.sendRedirect("employeeDetails.jsp");
                             }
 
                             break;
                         case "Modifier":
+                            
                             EmployeeBean e = new EmployeeBean();
                             EmployeeBean oldE = (EmployeeBean) session.getAttribute("employe");
                             e.setId(oldE.getId());
@@ -140,12 +149,18 @@ public class Controller extends HttpServlet {
                             loggedAdmin.modifyEmployee(e, db);
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
+                            
                             break;
+                            
                         case "Voir liste":
+                            
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
+                            
                             break;
+                            
                         case "Deconnexion":
+                            
                             Enumeration<String> sessionsAttributeNames =  session.getAttributeNames();
                             
                             while(sessionsAttributeNames.hasMoreElements()){
@@ -153,6 +168,7 @@ public class Controller extends HttpServlet {
                             }
                             
                             response.sendRedirect("logout.jsp");
+                            
                             break;
                         default:
                             out.println("[" + action + "]");

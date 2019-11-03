@@ -21,13 +21,14 @@
         
         
         <span>
-            Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.
             <form action = "Controller">
-                <button type="submit" name ="button" class="btn btn-default btn-sm" value ="Deconnexion">
-                    <span class="glyphicon glyphicon-off"></span> Déconnexion 
+                <span style = "color: blue;">Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.</span>
+                <button type="submit" name ="button" class="btn btn-default btn-sm" value ="Deconnexion" style="float: right;">
+                    <span class="glyphicon glyphicon-off" style = "color: red;"></span> 
                 </button>
             </form>
         </span>
+                <br>
         
         
         <form action =  "Controller">

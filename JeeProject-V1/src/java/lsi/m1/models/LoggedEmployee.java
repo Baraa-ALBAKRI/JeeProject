@@ -5,6 +5,7 @@
  */
 package lsi.m1.models;
 
+import lsi.m1.data.DBActions;
 import java.util.List;
 
 /**
@@ -15,7 +16,11 @@ public class LoggedEmployee {
     private String accessLevel;
     
     public LoggedEmployee(){
-        this.accessLevel = "employee";
+        this("employee");
+    }
+    
+    protected LoggedEmployee(String accessLevel){
+        setAccessLevel(accessLevel);
     }
     
     public List<EmployeeBean> getEmployeesList(DBActions db){
@@ -26,7 +31,7 @@ public class LoggedEmployee {
         return accessLevel;
     }
 
-    public void setAccessLevel(String accessLevel) {
+    private void setAccessLevel(String accessLevel) {
         this.accessLevel = accessLevel;
     }
 }

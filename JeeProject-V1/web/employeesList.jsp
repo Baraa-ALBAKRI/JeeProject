@@ -20,30 +20,34 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
         <style>
             td{
-                border:1px solid #000;
+                border:0px solid #000;
             }
 
             tr td:last-child{
                 width:1%;
                 white-space:nowrap;
             }
-        </style>
+            th{
+                color: blueviolet
+            }
+       </style>
     </head>
     <body>
         <div style="padding: 15px;">
         <c:set var="buttonValue" value="" scope="session" />
         <c:if test="${loggedUser == null}">
-            <c:redirect url = "accueil.jsp"/>
+            <c:redirect url = "login.jsp"/>
         </c:if>
 
         <span>
-            Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.
             <form action = "Controller">
-                <button type="submit" name ="button" class="btn btn-default btn-sm" value ="Deconnexion">
-                    <span class="glyphicon glyphicon-off"></span> Déconnexion 
+                <span style = "color: blue;">Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.</span>
+                <button type="submit" name ="button" class="btn btn-default btn-sm" value ="Deconnexion" style="float: right;">
+                    <span class="glyphicon glyphicon-off" style = "color: red;"></span> 
                 </button>
             </form>
         </span>
+                <br>
         
         <c:choose>
             <c:when test="${selectStatus != null && selectStatus == 'Suppression réussie.'}">
@@ -94,10 +98,13 @@
                             </c:forEach>
                         </tbody>
                     </table>
+                    <br>
                     <c:if test="${loggedUser.getAccessLevel() == 'admin'}">
-                        <input type = "submit" name = "button" value = "Supprimer">
+                        <center>
+                        <input type = "submit" name = "button" value = "Supprimer" >
                         <input type = "submit" name = "button" value = "Details">
                         <input type = "submit" name = "button" value = "Ajouter">
+                        </center>
                     </c:if>
                 </form>
             </c:otherwise>
