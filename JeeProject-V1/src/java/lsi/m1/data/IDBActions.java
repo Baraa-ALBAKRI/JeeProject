@@ -7,7 +7,7 @@ package lsi.m1.data;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import lsi.m1.models.EmployeeBean;
+import lsi.m1.DBmodels.EmployeeBean;
 
 /**
  *

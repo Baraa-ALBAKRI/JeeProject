@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lsi.m1.models.EmployeeBean;
+import lsi.m1.DBmodels.EmployeeBean;
 import static lsi.m1.utils.Constants.*;
 
 /**
