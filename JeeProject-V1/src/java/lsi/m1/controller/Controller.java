@@ -77,8 +77,10 @@ public class Controller extends HttpServlet {
                             
                             if (id > -1) {
                                 loggedAdmin.deleteEmployee(id, db);
+                                session.setAttribute("selectStatusColor", "green");
                                 session.setAttribute("selectStatus", "Suppression réussie.");
                             } else {
+                                session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                             }
                             
@@ -97,6 +99,7 @@ public class Controller extends HttpServlet {
                             }
                             
                             else {
+                                session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                                 response.sendRedirect("employeesList.jsp");
@@ -122,6 +125,8 @@ public class Controller extends HttpServlet {
                                 loggedAdmin.addEmployee(e, db);
                                  session.setAttribute("buttonValue", "");
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                                session.setAttribute("selectStatusColor", "green");
+                                session.setAttribute("selectStatus", "Ajoute réussie.");
                                 response.sendRedirect("employeesList.jsp");
                             } 
                             
@@ -148,6 +153,8 @@ public class Controller extends HttpServlet {
                             e.setMail(request.getParameter("mailInput"));
                             loggedAdmin.modifyEmployee(e, db);
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                            session.setAttribute("selectStatusColor", "green");
+                                session.setAttribute("selectStatus", "Modification réussie.");
                             response.sendRedirect("employeesList.jsp");
                             
                             break;

@@ -47,14 +47,11 @@
                 </button>
             </form>
         </span>
-                <br>
+        <br>
         
         <c:choose>
-            <c:when test="${selectStatus != null && selectStatus == 'Suppression réussie.'}">
-                <span>Suppression réussie.</span>
-            </c:when>
-            <c:when test="${selectStatus != null && selectStatus == 'Veuillez sélectionner un employé.'}">
-                <span>Veuillez sélectionner un employé.</span>
+            <c:when test="${selectStatus != null}">
+                <span style="color:${selectStatusColor};">${selectStatus}</span>
             </c:when>
         </c:choose>
         
@@ -62,7 +59,9 @@
 
         <c:choose>
             <c:when test = "${employeesList == null || employeesList.size() == 0}">
-                Nous devons recruter !
+                <span style="color: blue;">
+                    Nous devons recruter !
+                </span>
             </c:when>
             <c:otherwise>
                 <form action = "Controller">
