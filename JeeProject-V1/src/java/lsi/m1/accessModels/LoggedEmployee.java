@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lsi.m1.models;
+package lsi.m1.accessModels;
 
 import lsi.m1.data.DBActions;
 import java.util.List;
+import lsi.m1.DBmodels.EmployeeBean;
 
 /**
  *
