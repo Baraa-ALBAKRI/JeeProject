@@ -46,52 +46,76 @@
 
 
             <form action =  "Controller">
-                <div class="form-group col-md-8">
-                    <label for="lastNameInput">Nom</label>
-                    <input type="text" class="form-control" name="lastNameInput" value ="${employe.lastName}">
-                </div>
-                <div class="form-group col-md-8">
-                    <label for="firstNameInput">Prénom</label>
-                    <input type="text" class="form-control" name="firstNameInput" value ="${employe.firstName}">
-                </div>
-                <div class="form-group col-md-8">
-                    <label for="homePhoneInput">Tel dom</label>
-                    <input type="tel" class="form-control" name="homePhoneInput" value="${employe.homePhone}">
-                </div>
-                <div class="form-group col-md-8">
-                    <label for="mobilePhoneInput">Tel mob</label>
-                    <input type="tel" class="form-control" name="mobilePhoneInput" value="${employe.mobilePhone}">
-                </div>
-                <div class="form-group col-md-8">
-                    <label for="workPhoneInput">Tel pro</label>
-                    <input type="tel" class="form-control" name="workPhoneInput" value="${employe.workPhone}">
-                </div>
-                <div class="form-group col-md-8">
-                    <label for="addressInput">Adresse</label>
-                    <input type="text" class="form-control" name="addressInput" value="${employe.address}">
+                <div class ="row">
+                    <div class ="col-lg-12">
+                        <label for="lastNameInput">Nom</label>
+                        <input type="text" class="form-control" name="lastNameInput" value ="${employe.lastName}">
+                    </div>
                 </div>
 
-                <div class="form-group col-md-8">
-                    <label for="zipInput">Code Postal</label>
-                    <input type="text" class="form-control" name="zipInput" value="${employe.zipCode}">
+                <div class ="row">
+                    <div class ="col-lg-12">
+                        <label for="firstNameInput">Prénom</label>
+                        <input type="text" class="form-control" name="firstNameInput" value ="${employe.firstName}">
+                    </div>
                 </div>
 
-                <div class="form-group col-md-8">
-                    <label for="cityInput">Ville</label>
-                    <input type="text" class="form-control" name="cityInput" value="${employe.city}">
+                <div class ="row">
+                    <div class ="col-lg-12">
+                        <label for="homePhoneInput">Tel dom</label>
+                        <input type="tel" class="form-control" name="homePhoneInput" value="${employe.homePhone}">
+                    </div>
+                </div>
+                <div class ="row">
+                    <div class ="col-lg-12">
+                        <label for="mobilePhoneInput">Tel mob</label>
+                        <input type="tel" class="form-control" name="mobilePhoneInput" value="${employe.mobilePhone}">
+                    </div>
+                </div>
+                <div class ="row">
+                    <div class ="col-lg-12">
+                        <label for="workPhoneInput">Tel pro</label>
+                        <input type="tel" class="form-control" name="workPhoneInput" value="${employe.workPhone}">
+                    </div>
+                </div>
+                <div class ="row">
+                    <div class ="col-lg-6">
+                        <label for="addressInput">Adresse</label>
+                        <input type="text" class="form-control" name="addressInput" value="${employe.address}">
+                    </div>
+                    <div class ="col-lg-6">
+                        <label for="zipInput">Code Postal</label>
+                        <input type="text" class="form-control" name="zipInput" value="${employe.zipCode}">
+                    </div>
                 </div>
 
-                <div class="form-group col-md-8">
-                    <label for="mailInput">Adresse mail</label>
-                    <input type="mail" class="form-control" name="mailInput" value="${employe.mail}">
+
+                <div class ="row">
+                    <div class ="col-lg-6">
+                        <label for="cityInput">Ville</label>
+                        <input type="text" class="form-control" name="cityInput" value="${employe.city}">
+                    </div>
+                    <div class ="col-lg-6">
+                        <label for="mailInput">Adresse mail</label>
+                        <input type="mail" class="form-control" name="mailInput" value="${employe.mail}">
+                    </div>
+                </div>
+                <div class="row">
+                    <br>
+                </div>
+                <div class="row">
+                    <div class ="col-lg-6">
+                    </div>
+                    <div class ="col-lg-6">
+                        <div class ="col-lg-12 text-center">
+                            <input type="submit" class="btn btn-primary" name = "button" value = "${buttonValue}">
+                        
+                            <input type="submit" class="btn" name = "button" value = "Voir liste">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group col-md-8">
-                    <input type="submit" class="btn btn-primary" name = "button" value = "${buttonValue}">
-                    <input type="submit" class="btn" name = "button" value = "Voir liste">
-                </div>
-                    
-              
+
             </form>
         </div>
     </body>
