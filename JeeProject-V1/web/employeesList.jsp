@@ -50,7 +50,7 @@
         <br>
         
         <c:choose>
-            <c:when test="${selectStatus != null}">
+            <c:when test="${selectStatus != null && selectStatus != 'Merci de remplir le formulaire avec des informations valides.'}">
                 <span style="color:${selectStatusColor};">${selectStatus}</span>
             </c:when>
         </c:choose>

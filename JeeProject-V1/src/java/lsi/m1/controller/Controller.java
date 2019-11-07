@@ -138,7 +138,7 @@ public class Controller extends HttpServlet {
                                 }
                                 else{
                                     session.setAttribute("selectStatusColor", "red");
-                                    session.setAttribute("selectStatus", "Merci de remplir le forme avec des informations valids");
+                                    session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
                                     session.setAttribute("employe", null);
                                     response.sendRedirect("employeeDetails.jsp");
                                 }
@@ -175,7 +175,7 @@ public class Controller extends HttpServlet {
                             }
                             else{
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Merci de remplir le forme avec des informations valids");
+                                session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
                                 response.sendRedirect("employeeDetails.jsp");
                             }
                             break;
