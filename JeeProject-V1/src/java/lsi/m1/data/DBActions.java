@@ -59,7 +59,7 @@ public class DBActions implements IDBActions{
         return pstmt;    
     }
     
-    @Override
+    
     public void runQuery(String req, String... parametres) {
         try{
             creerConn();
@@ -71,7 +71,6 @@ public class DBActions implements IDBActions{
         }
     }
 
-    @Override
     public ResultSet getResultSet(String req, String... parametres) {
         try{
             creerConn();
@@ -137,4 +136,20 @@ public class DBActions implements IDBActions{
         }
         return null;
     }
+
+    @Override
+    public void deleteEmployee(int id) {
+        runQuery(Query_DELETE_ONE_EMPLOYEE, Integer.toString(id));
+    }
+
+    @Override
+    public void updateEmployee(EmployeeBean e) {
+        runQuery(Query_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone(), e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode(), e.getCity(), e.getMail(), Integer.toString(e.getId()));
+    }
+    
+    @Override
+    public void insertEmployee(EmployeeBean e) {
+        runQuery(Query_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone(), e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode(), e.getCity(), e.getMail());
+    }
+
 }

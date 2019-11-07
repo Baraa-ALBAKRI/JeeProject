@@ -109,7 +109,7 @@
                     <div class ="col-lg-6">
                         <div class ="col-lg-12 text-center">
                             <input type="submit" class="btn btn-primary" name = "button" value = "${buttonValue}">
-                        
+
                             <input type="submit" class="btn" name = "button" value = "Voir liste">
                         </div>
                     </div>
