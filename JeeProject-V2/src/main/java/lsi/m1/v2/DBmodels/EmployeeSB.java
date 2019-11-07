@@ -25,4 +25,8 @@ public class EmployeeSB {
         Query q = em.createQuery("SELECT e FROM Employees e");
         return q.getResultList();
     }
+    
+    public Employees getEmployee(int id){
+        return em.find(Employees.class, id);
+    }
 }

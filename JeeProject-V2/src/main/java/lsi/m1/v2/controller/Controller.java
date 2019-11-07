@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
+import lsi.m1.v2.accessModels.LoggedAdmin;
 import lsi.m1.v2.accessModels.LoggedEmployee;
 
 /**
@@ -39,19 +40,11 @@ public class Controller extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            LoggedEmployee loggedEmployee = new LoggedEmployee();
-            listOfEmployees = new ArrayList<>();
-        listOfEmployees.addAll(loggedEmployee.getEmployeesList(employeeSB));
-        for(Employees aEmployee : listOfEmployees)
-        {
-            if("Bond".equals(aEmployee.getLastname()) && "James".equals(aEmployee.getFirstname()))
-            {
+            LoggedAdmin loggedAdmin = new LoggedAdmin();
+           
                 
-                request.getSession().setAttribute("key_User", aEmployee);
+                request.getSession().setAttribute("key_User", loggedAdmin.getEmployee(1, employeeSB));
                 request.getRequestDispatcher("welcome.jsp").forward(request, response);
-            }
-            
-        }
         }
     }
 
