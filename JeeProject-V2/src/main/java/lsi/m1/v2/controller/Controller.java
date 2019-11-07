@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
+import lsi.m1.v2.accessModels.LoggedEmployee;
 
 /**
  *
@@ -37,10 +38,10 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            System.out.println("Here ");
+            
+            LoggedEmployee loggedEmployee = new LoggedEmployee();
             listOfEmployees = new ArrayList<>();
-        listOfEmployees.addAll(employeeSB.getEmployees());
-        System.out.println("Here2 ");
+        listOfEmployees.addAll(loggedEmployee.getEmployeesList(employeeSB));
         for(Employees aEmployee : listOfEmployees)
         {
             if("Bond".equals(aEmployee.getLastname()) && "James".equals(aEmployee.getFirstname()))
