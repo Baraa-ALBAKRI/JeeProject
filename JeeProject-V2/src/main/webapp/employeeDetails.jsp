@@ -20,12 +20,7 @@
 
     </head>
     <body>
-        <div style="padding: 15px;">
-
-            <c:if test = "${employe == null}">
-                <c:remove scope="session" var="selectStatus"/>
-                <c:redirect url = "employeesList.jsp"/>   
-            </c:if>    
+        <div style="padding: 15px;">   
 
             <span>
                 <form action = "Controller">

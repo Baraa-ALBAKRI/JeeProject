@@ -22,11 +22,6 @@
     <body>
         <div style="padding: 15px;">
 
-            <c:if test = "${employe == null}">
-                <c:remove scope="session" var="selectStatus"/>
-                <c:redirect url = "employeesList.jsp"/>   
-            </c:if>    
-
             <span>
                 <form action = "Controller">
                     <span style = "color: blue;">Bonjour ${loggedUser.getAccessLevel()} ! Votre session est active.</span>
