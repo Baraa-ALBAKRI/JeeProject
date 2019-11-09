@@ -134,7 +134,7 @@ public class Controller extends HttpServlet {
                                     session.setAttribute("buttonValue", "");
                                     session.setAttribute("employeesList", loggedUser.getEmployeesList(employeeSB));
                                     session.setAttribute("selectStatusColor", "green");
-                                    session.setAttribute("selectStatus", "Ajoute réussie.");
+                                    session.setAttribute("selectStatus", "Ajout réussie.");
                                     response.sendRedirect("employeesList.jsp");
                                 }
                                 else{
