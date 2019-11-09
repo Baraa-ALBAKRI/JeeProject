@@ -8,11 +8,13 @@ package lsi.m1.v2.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
 import lsi.m1.v2.accessModels.LoggedAdmin;
@@ -25,7 +27,7 @@ import lsi.m1.v2.accessModels.LoggedEmployee;
 public class Controller extends HttpServlet {
     @EJB
     private EmployeeSB employeeSB;
-    ArrayList<Employees> listOfEmployees;
+    HttpSession session;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,6 +51,35 @@ public class Controller extends HttpServlet {
                 request.getSession().setAttribute("key_User", e);
                 request.getRequestDispatcher("welcome.jsp").forward(request, response);
         }
+    }
+    
+    private boolean verifyInputForm(Employees e){
+        if(e.getLastname() != null &&
+            e.getFirstname() != null &&
+            e.getHomephone() != null &&
+            e.getMobilephone() != null &&
+            e.getWorkphone() != null &&
+            e.getAddress() != null &&
+            e.getZipcode() != null &&
+            e.getCity() != null &&
+            e.getMail() != null)
+        {
+            if(contentJustNumber(e.getHomephone()) && 
+                    contentJustNumber(e.getMobilephone()) &&
+                    contentJustNumber(e.getWorkphone()) &&
+                    contentJustNumber(e.getZipcode()) &&
+                    e.getZipcode().length() < 6 &&
+                    e.getMail().contains("@") &&
+                    e.getMail().contains("."))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean contentJustNumber(String s){
+        return Pattern.matches("[0-9 ]*",s);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
