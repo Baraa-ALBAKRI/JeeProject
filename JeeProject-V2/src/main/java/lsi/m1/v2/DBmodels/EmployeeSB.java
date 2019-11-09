@@ -29,4 +29,27 @@ public class EmployeeSB {
     public Employees getEmployee(int id){
         return em.find(Employees.class, id);
     }
+    
+    public void deleteEmployee(int id){
+        Employees emp = getEmployee(id);
+        em.remove(emp);
+    }
+    
+    public void modifyEmployee(Employees e){
+        Employees emp = getEmployee(e.getId());
+        emp.setLastname(e.getLastname());
+        emp.setFirstname(e.getFirstname());
+        emp.setHomephone(e.getHomephone());
+        emp.setMobilephone(e.getMobilephone());
+        emp.setWorkphone(e.getWorkphone());
+        emp.setAddress(e.getAddress());
+        emp.setZipcode(e.getZipcode());
+        emp.setCity(e.getCity());
+        emp.setMail(e.getMail());
+    }
+    
+    public void insertEmployee(Employees e) {
+        em.persist(e);
+    }
+    
 }

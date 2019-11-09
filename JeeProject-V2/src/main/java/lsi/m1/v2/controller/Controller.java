@@ -42,8 +42,11 @@ public class Controller extends HttpServlet {
             
             LoggedAdmin loggedAdmin = new LoggedAdmin();
            
-                
-                request.getSession().setAttribute("key_User", loggedAdmin.getEmployee(1, employeeSB));
+                Employees e =  loggedAdmin.getEmployee(2, employeeSB);
+                e.setFirstname("Baraaa");
+                loggedAdmin.addEmployee(e, employeeSB);
+                e =  loggedAdmin.getEmployee(8, employeeSB);
+                request.getSession().setAttribute("key_User", e);
                 request.getRequestDispatcher("welcome.jsp").forward(request, response);
         }
     }

@@ -18,7 +18,19 @@ public class LoggedAdmin extends LoggedEmployee {
         super("admin");
     }
     
-    public Employees getEmployee(int id, EmployeeSB db){
-        return db.getEmployee(id);
+    public Employees getEmployee(int id, EmployeeSB employeeSB){
+        return employeeSB.getEmployee(id);
+    }
+    
+    public void deleteEmployee(int id, EmployeeSB employeeSB) {
+        employeeSB.deleteEmployee(id);
+    }
+    
+    public void modifyEmployee(Employees e, EmployeeSB employeeSB) {
+        employeeSB.modifyEmployee(e);
+    }
+    
+    public void addEmployee(Employees e, EmployeeSB employeeSB) {
+        employeeSB.insertEmployee(e);
     }
 }
