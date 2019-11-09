@@ -42,7 +42,7 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+
             session = request.getSession();
             DBActions db = new DBActions();
             LoggedEmployee loggedUser = (LoggedEmployee) session.getAttribute("loggedUser");
@@ -70,7 +70,6 @@ public class Controller extends HttpServlet {
                     response.sendRedirect("employeesList.jsp");
                 }
             } //Not acceil page
-            
             else {
                 String action = request.getParameter("button");
                 if (action != null) {
@@ -78,7 +77,7 @@ public class Controller extends HttpServlet {
                     session.setAttribute("selectStatus", "");
                     LoggedAdmin loggedAdmin;
                     switch (action) {
-                        
+
                         case "Supprimer":
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             if (id > -1) {
@@ -89,12 +88,12 @@ public class Controller extends HttpServlet {
                                 session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                             }
-                            
+
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
-                            
+
                             break;
-                            
+
                         case "Details":
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             if (id > -1) {
@@ -102,9 +101,7 @@ public class Controller extends HttpServlet {
                                 session.setAttribute("employe", loggedAdmin.getEmployee(id, db));
                                 session.setAttribute("selectStatus", null);
                                 response.sendRedirect("employeeDetails.jsp");
-                            }
-                            
-                            else {
+                            } else {
                                 session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
@@ -112,7 +109,7 @@ public class Controller extends HttpServlet {
                             }
 
                             break;
-                            
+
                         case "Ajouter":
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             if (session.getAttribute("buttonValue").equals("Ajouter")) {
@@ -127,24 +124,21 @@ public class Controller extends HttpServlet {
                                 e.setZipCode(request.getParameter("zipInput"));
                                 e.setCity(request.getParameter("cityInput"));
                                 e.setMail(request.getParameter("mailInput"));
-                                
-                                if(verifyInputForm(e)){
-                                loggedAdmin.addEmployee(e, db);
+
+                                if (verifyInputForm(e)) {
+                                    loggedAdmin.addEmployee(e, db);
                                     session.setAttribute("buttonValue", "");
                                     session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                                     session.setAttribute("selectStatusColor", "green");
-                                    session.setAttribute("selectStatus", "Ajoute réussie.");
+                                    session.setAttribute("selectStatus", "Ajout réussie.");
                                     response.sendRedirect("employeesList.jsp");
-                                }
-                                else{
+                                } else {
                                     session.setAttribute("selectStatusColor", "red");
                                     session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
                                     session.setAttribute("employe", null);
                                     response.sendRedirect("employeeDetails.jsp");
                                 }
-                            } 
-                            
-                            else {
+                            } else {
                                 session.setAttribute("buttonValue", "Ajouter");
                                 session.setAttribute("selectStatus", null);
                                 session.setAttribute("employe", null);
@@ -166,37 +160,36 @@ public class Controller extends HttpServlet {
                             e.setZipCode(request.getParameter("zipInput"));
                             e.setCity(request.getParameter("cityInput"));
                             e.setMail(request.getParameter("mailInput"));
-                            if(verifyInputForm(e)){
-                            loggedAdmin.modifyEmployee(e, db);
+                            if (verifyInputForm(e)) {
+                                loggedAdmin.modifyEmployee(e, db);
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                                 session.setAttribute("selectStatusColor", "green");
                                 session.setAttribute("selectStatus", "Modification réussie.");
                                 response.sendRedirect("employeesList.jsp");
-                            }
-                            else{
+                            } else {
                                 session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
                                 response.sendRedirect("employeeDetails.jsp");
                             }
                             break;
-                            
+
                         case "Voir liste":
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
                             response.sendRedirect("employeesList.jsp");
-                            
+
                             break;
-                            
+
                         case "Deconnexion":
-                            
-                            Enumeration<String> sessionsAttributeNames =  session.getAttributeNames();
-                            
-                            while(sessionsAttributeNames.hasMoreElements()){
+
+                            Enumeration<String> sessionsAttributeNames = session.getAttributeNames();
+
+                            while (sessionsAttributeNames.hasMoreElements()) {
                                 session.removeAttribute(sessionsAttributeNames.nextElement());
                             }
-                            
+
                             response.sendRedirect("logout.jsp");
-                            
+
                             break;
                         default:
                             out.println("[" + action + "]");
@@ -205,34 +198,32 @@ public class Controller extends HttpServlet {
             }
         }
     }
-    
-    private boolean verifyInputForm(EmployeeBean e){
-        if(e.getLastName() != null &&
-            e.getFirstName() != null &&
-            e.getHomePhone() != null &&
-            e.getMobilePhone() != null &&
-            e.getWorkPhone() != null &&
-            e.getAddress() != null &&
-            e.getZipCode() != null &&
-            e.getCity() != null &&
-            e.getMail() != null)
-        {
-            if(contentJustNumber(e.getHomePhone()) && 
-                    contentJustNumber(e.getMobilePhone()) &&
-                    contentJustNumber(e.getWorkPhone()) &&
-                    contentJustNumber(e.getZipCode()) &&
-                    e.getZipCode().length() < 6 &&
-                    e.getMail().contains("@") &&
-                    e.getMail().contains("."))
-            {
+
+    private boolean verifyInputForm(EmployeeBean e) {
+        if (e.getLastName() != null
+                && e.getFirstName() != null
+                && e.getHomePhone() != null
+                && e.getMobilePhone() != null
+                && e.getWorkPhone() != null
+                && e.getAddress() != null
+                && e.getZipCode() != null
+                && e.getCity() != null
+                && e.getMail() != null) {
+            if (contentJustNumber(e.getHomePhone())
+                    && contentJustNumber(e.getMobilePhone())
+                    && contentJustNumber(e.getWorkPhone())
+                    && contentJustNumber(e.getZipCode())
+                    && e.getZipCode().length() < 6
+                    && e.getMail().contains("@")
+                    && e.getMail().contains(".")) {
                 return true;
             }
         }
         return false;
     }
-    
-    private boolean contentJustNumber(String s){
-        return Pattern.matches("[0-9 ]*",s);
+
+    private boolean contentJustNumber(String s) {
+        return Pattern.matches("[0-9 ]*", s);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
