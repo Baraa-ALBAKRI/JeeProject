@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import static lsi.m1.utils.Constants.FRM_LOGIN;
-import static lsi.m1.utils.Constants.FRM_PASSWORD;
+import static lsi.m1.utils.Constants.*;
 import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
 import lsi.m1.v2.accessModels.LoggedAdmin;
@@ -51,20 +50,23 @@ public class Controller extends HttpServlet {
                 String login = request.getParameter(FRM_LOGIN);
                 String password = request.getParameter(FRM_PASSWORD);
                 if (login == null || password == null) {
-                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
+                    session.setAttribute("errKey", ERR_LOGIN);
                     response.sendRedirect("login.jsp");
                 } else if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
                     loggedUser = new LoggedAdmin();
                     session.setAttribute("loggedUser", loggedUser);
-                    session.setAttribute("errKey", "");
+                    session.removeAttribute("errKey");
+                   // session.setAttribute("errKey", "");
                 } else if (login.equals(getServletContext().getInitParameter("loginEmployee")) && password.equals(getServletContext().getInitParameter("passwordEmployee"))) {
                     loggedUser = new LoggedEmployee();
                     session.setAttribute("loggedUser", loggedUser);
-                    session.setAttribute("errKey", "");
+                    //session.setAttribute("errKey", "");
+                    session.removeAttribute("errKey");
                 }
                 if (loggedUser == null) {
-                    session.setAttribute("loginLevel", "");
-                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
+                    //session.setAttribute("loginLevel", "");
+                    session.removeAttribute("loginLevel");
+                    session.setAttribute("errKey", ERR_LOGIN);
                     response.sendRedirect("login.jsp");
                 } else {
                     session.setAttribute("employeesList", loggedUser.getEmployeesList(employeeSB));
@@ -76,7 +78,8 @@ public class Controller extends HttpServlet {
                 String action = request.getParameter("button");
                 if (action != null) {
                     int id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
-                    session.setAttribute("selectStatus", "");
+                    //session.setAttribute("selectStatus", "");
+                    session.removeAttribute("selectStatus");
                     LoggedAdmin loggedAdmin;
                     switch (action) {
                         
@@ -85,10 +88,10 @@ public class Controller extends HttpServlet {
                             if (id > -1) {
                                 loggedAdmin.deleteEmployee(id, employeeSB);
                                 session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", "Suppression réussie.");
+                                session.setAttribute("selectStatus", SUPP_OK);
                             } else {
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                                session.setAttribute("selectStatus", ERR_SELECT);
                             }
                             
                             session.setAttribute("employeesList", loggedUser.getEmployeesList(employeeSB));
@@ -101,13 +104,14 @@ public class Controller extends HttpServlet {
                             if (id > -1) {
                                 session.setAttribute("buttonValue", "Modifier");
                                 session.setAttribute("employe", loggedAdmin.getEmployee(id, employeeSB));
-                                session.setAttribute("selectStatus", null);
+                                //session.setAttribute("selectStatus", null);
+                                session.removeAttribute("selectStatus");
                                 response.sendRedirect("employeeDetails.jsp");
                             }
                             
                             else {
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                                session.setAttribute("selectStatus", ERR_SELECT);
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(employeeSB));
                                 response.sendRedirect("employeesList.jsp");
                             }
@@ -134,13 +138,14 @@ public class Controller extends HttpServlet {
                                     session.setAttribute("buttonValue", "");
                                     session.setAttribute("employeesList", loggedUser.getEmployeesList(employeeSB));
                                     session.setAttribute("selectStatusColor", "green");
-                                    session.setAttribute("selectStatus", "Ajout réussie.");
+                                    session.setAttribute("selectStatus",ADD_OK);
                                     response.sendRedirect("employeesList.jsp");
                                 }
                                 else{
                                     session.setAttribute("selectStatusColor", "red");
-                                    session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
-                                    session.setAttribute("employe", null);
+                                    session.setAttribute("selectStatus",FORM_KO );
+                                    //session.setAttribute("employe", null);
+                                    session.removeAttribute("selectStatus");
                                     response.sendRedirect("employeeDetails.jsp");
                                 }
                             } 
@@ -148,8 +153,10 @@ public class Controller extends HttpServlet {
                             else {
                                 
                                 session.setAttribute("buttonValue", "Ajouter");
-                                session.setAttribute("selectStatus", null);
-                                session.setAttribute("employe", null);
+                                //session.setAttribute("selectStatus", null);
+                                session.removeAttribute("selectStatus");
+                                //session.setAttribute("employe", null);
+                                session.removeAttribute("employe");
                                 response.sendRedirect("employeeDetails.jsp");
                             }
 
@@ -172,12 +179,12 @@ public class Controller extends HttpServlet {
                             loggedAdmin.modifyEmployee(e, employeeSB);
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(employeeSB));
                                 session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", "Modification réussie.");
+                                session.setAttribute("selectStatus",UPDT_OK);
                                 response.sendRedirect("employeesList.jsp");
                             }
                             else{
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
+                                session.setAttribute("selectStatus", FORM_KO);
                                 response.sendRedirect("employeeDetails.jsp");
                             }
                             break;
