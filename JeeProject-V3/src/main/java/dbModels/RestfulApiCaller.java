@@ -19,8 +19,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-import java.io.File;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import static utils.Constants.*;
@@ -138,10 +141,30 @@ public class RestfulApiCaller implements AppActions {
     public void insertEmployee(Employees e) {
 
         try {
-            changeConnexion(REST_URL_LIST, "POST");
+            URL u = new URL(REST_URL_LIST);
+            conn = (HttpURLConnection) u.openConnection();
+            //changeConnexion(REST_URL_LIST, "POST");
+            conn.setConnectTimeout(1000);
 
-            conn.getOutputStream().write(xmlWriter(e).getBytes());
-            conn.getOutputStream().flush();
+            conn.setRequestMethod(HttpMethod.POST);
+
+            conn.setRequestProperty("Content-Type", MediaType.APPLICATION_XML);
+            conn.setRequestProperty("Accept", MediaType.APPLICATION_XML);
+
+            conn.setUseCaches(false);
+            conn.setDoOutput(true);
+
+            final OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(xmlWriter(e).getBytes());
+            outputStream.flush();
+            if (conn.getResponseCode() != 204) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+            }
+            final DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            dataOutputStream.close();
+            //conn.getOutputStream().write(xmlWriter(e).getBytes());
+            //conn.getOutputStream().flush();
             conn.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
