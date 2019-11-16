@@ -1,21 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lsi.m1.utils;
 
-/**
- *
- * @author nox
+/** Constants such as inputs' names or response messages.
  */
 public class Constants {
+    /**Login input's name*/
     public static final String FRM_LOGIN = "loginForm";
+    /**Password input's name*/
     public static final String FRM_PASSWORD = "passwordForm";
+    /**Error (login informations) message*/
     public static final String ERR_LOGIN = "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.";
+    /**Success (delete) message*/
     public static final String SUPP_OK = "Suppression réussie.";
+    /**Error (no employee selected) message*/
     public static final String ERR_SELECT = "Veuillez sélectionner un employé.";
+    /**Success (add) message*/
     public static final String ADD_OK =  "Ajout réussi.";
+    /**Error (form has been filled with wrong parameters) message*/
     public static final String FORM_KO = "Merci de remplir le formulaire avec des informations valides.";
+    /**Success (modify) message*/
     public static final String UPDT_OK =  "Modification réussie.";
 }

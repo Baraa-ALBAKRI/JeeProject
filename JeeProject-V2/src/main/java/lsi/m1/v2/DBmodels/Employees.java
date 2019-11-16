@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package lsi.m1.v2.DBmodels;
 
 import java.io.Serializable;
@@ -19,10 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author mhdba
- */
+
 @Entity
 @Table(name = "employees")
 @XmlRootElement
@@ -38,6 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Employees.findByZipcode", query = "SELECT e FROM Employees e WHERE e.zipcode = :zipcode"),
     @NamedQuery(name = "Employees.findByCity", query = "SELECT e FROM Employees e WHERE e.city = :city"),
     @NamedQuery(name = "Employees.findByMail", query = "SELECT e FROM Employees e WHERE e.mail = :mail")})
+/**Employees class. Represents an Employee.
+ *
+ */
 public class Employees implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -94,11 +90,26 @@ public class Employees implements Serializable {
 
     public Employees() {
     }
-
+    /**Creates an instance of Employee only from an ID.
+     * 
+     * @param id 
+     */
     public Employees(Integer id) {
         this.id = id;
     }
-
+    /**Creates an instance of Employee from the informations given.
+     * 
+     * @param id
+     * @param lastname
+     * @param firstname
+     * @param homephone
+     * @param mobilephone
+     * @param workphone
+     * @param address
+     * @param zipcode
+     * @param city
+     * @param mail 
+     */
     public Employees(Integer id, String lastname, String firstname, String homephone, String mobilephone, String workphone, String address, String zipcode, String city, String mail) {
         this.id = id;
         this.lastname = lastname;

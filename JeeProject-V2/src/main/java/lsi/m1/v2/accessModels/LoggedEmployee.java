@@ -1,19 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package lsi.m1.v2.accessModels;
 
 import java.util.List;
 import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
 
-/**
- *
- * @author mhdba
+/**Represents a logged Employee.
+ * He can read other employees.
  */
 public class LoggedEmployee {
+    /**Access Level of the User.*/
     private String accessLevel;
     
     public LoggedEmployee(){
@@ -24,6 +20,11 @@ public class LoggedEmployee {
         setAccessLevel(accessLevel);
     }
     
+    /**Get the list of all the employees.
+     * 
+     * @param db Session Bean used to interact with DB.
+     * @return the list of all the employees in DB.
+     */
     public List<Employees> getEmployeesList(EmployeeSB db){
         return db.getEmployees();
     }

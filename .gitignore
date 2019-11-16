@@ -3,3 +3,6 @@
 /JeeProject-V1/dist/
 /JeeProject-V2/target/
 /JeeProject-V2-BIS/target/
+JeeProject-V1/nbproject/project.properties
+
+JeeProject-V1/nbproject/ant-deploy.xml
