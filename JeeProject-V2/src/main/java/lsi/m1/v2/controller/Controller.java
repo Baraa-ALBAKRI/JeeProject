@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import static lsi.m1.utils.Constants.*;
 import lsi.m1.v2.DBmodels.AppActions;
-import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
 import lsi.m1.v2.accessModels.LoggedAdmin;
 import lsi.m1.v2.accessModels.LoggedEmployee;
