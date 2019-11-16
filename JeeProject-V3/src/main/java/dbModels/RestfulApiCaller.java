@@ -75,16 +75,40 @@ public class RestfulApiCaller implements AppActions {
         return employees;
     }
 
+    private String xmlWriter(Employees e) {
+        String xml;
+
+        xml = "<employees>"
+                + "<address>" + e.getAddress() + "</address>"
+                + "<city>" + e.getCity() + "</city>"
+                + "<firstname>" + e.getFirstname() + "</firstname>"
+                + "<homephone>" + e.getHomephone() + "</homephone>"
+                + "<lastname>" + e.getLastname() + "</lastname>"
+                + "<mail>" + e.getMail() + "</mail>"
+                + "<mobilephone>" + e.getMobilephone() + "</mobilephone>"
+                + "<workphone>" + e.getWorkphone() + "</workphone>"
+                + "<zipcode>" + e.getZipcode() + "</zipcode>"
+                + "</employees>";
+
+        return xml;
+    }
+
     private void changeConnexion(String url, String method) {
         try {
             URL u = new URL(url);
             conn = (HttpURLConnection) u.openConnection();
-            conn.setRequestMethod(method);
+
             switch (method) {
                 case "GET":
                     conn.setRequestProperty("Accept", "application/xml");
                     break;
+                case "POST":
+                    conn.setDoOutput(true);
+                    conn.setRequestProperty("Content-Type", "application/xml");
+
+                    break;
             }
+            conn.setRequestMethod(method);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +122,7 @@ public class RestfulApiCaller implements AppActions {
         try {
             changeConnexion(REST_URL_LIST + "/" + id + "/", "DELETE");
             List<Employees> employees;
-            employees =  xmlReader(conn.getInputStream());
+            employees = xmlReader(conn.getInputStream());
             conn.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,7 +136,17 @@ public class RestfulApiCaller implements AppActions {
 
     @Override
     public void insertEmployee(Employees e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        try {
+            changeConnexion(REST_URL_LIST, "POST");
+
+            conn.getOutputStream().write(xmlWriter(e).getBytes());
+            conn.getOutputStream().flush();
+            conn.disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
@@ -120,7 +154,7 @@ public class RestfulApiCaller implements AppActions {
         try {
             changeConnexion(REST_URL_LIST + "/" + id + "/", "GET");
             List<Employees> employees;
-            employees =  xmlReader(conn.getInputStream());
+            employees = xmlReader(conn.getInputStream());
             conn.disconnect();
             return employees.get(0);
         } catch (IOException ex) {
@@ -135,7 +169,7 @@ public class RestfulApiCaller implements AppActions {
         try {
             changeConnexion(REST_URL_LIST, "GET");
             List<Employees> employees;
-            employees =  xmlReader(conn.getInputStream());
+            employees = xmlReader(conn.getInputStream());
             conn.disconnect();
             return employees;
         } catch (IOException ex) {
