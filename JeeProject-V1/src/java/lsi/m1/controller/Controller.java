@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +18,7 @@ import lsi.m1.data.DBActions;
 import lsi.m1.DBmodels.EmployeeBean;
 import lsi.m1.accessModels.LoggedAdmin;
 import lsi.m1.accessModels.LoggedEmployee;
+import lsi.m1.data.AppActions;
 import static lsi.m1.utils.Constants.*;
 
 /**
@@ -43,143 +43,165 @@ public class Controller extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
+            AppActions appAction = new DBActions();
             session = request.getSession();
-            DBActions db = new DBActions();
+            //By default, the logged user is an employee.
             LoggedEmployee loggedUser = (LoggedEmployee) session.getAttribute("loggedUser");
+
+            //If the user is not logged then we try to get the login informations from the login page.
             if (loggedUser == null) {
+                //Login form informations
                 String login = request.getParameter(FRM_LOGIN);
                 String password = request.getParameter(FRM_PASSWORD);
+                //If it empty, it displays an error message and it goes back to the login page.
                 if (login == null || password == null) {
-                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
+                    session.setAttribute("errKey", ERR_LOGIN);
                     response.sendRedirect("login.jsp");
                 } else if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
+                    //If it corresponds to the login information of an Admin then the loggedUser becomes an admin.
                     loggedUser = new LoggedAdmin();
                     session.setAttribute("loggedUser", loggedUser);
-                    session.setAttribute("errKey", "");
+                    session.removeAttribute("errKey");
                 } else if (login.equals(getServletContext().getInitParameter("loginEmployee")) && password.equals(getServletContext().getInitParameter("passwordEmployee"))) {
+                    //If it corresponds to the login information of an Employee then the loggedUser becomes an Employee.
                     loggedUser = new LoggedEmployee();
                     session.setAttribute("loggedUser", loggedUser);
-                    session.setAttribute("errKey", "");
+                    session.removeAttribute("errKey");
                 }
+                //If no user can be logged, it displays an error message and goes back to the login page.
                 if (loggedUser == null) {
-                    session.setAttribute("loginLevel", "");
-                    session.setAttribute("errKey", "Echec de la connexion ! Vérifiez votre login et/ou mot de passe et essayez à nouveau.");
+                    session.removeAttribute("loginLevel");
+                    session.setAttribute("errKey", ERR_LOGIN);
                     response.sendRedirect("login.jsp");
                 } else {
-                    session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                    //Otherwise, it displays the list of employees (redirection to employeeList.jsp
+                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
                     response.sendRedirect("employeesList.jsp");
                 }
-            } //Not acceil page
-            else {
-                String action = request.getParameter("button");
+            } else {
+                //If the user is already logged, we react to his actions.
+                String action = request.getParameter(BTN_NAME);
                 if (action != null) {
-                    int id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
-                    session.setAttribute("selectStatus", "");
+                    //Trying to get the selected employee's ID.
+                    int id = Integer.parseInt(request.getParameter(RADIO_BTN) != null ? request.getParameter(RADIO_BTN) : "-1");
+                    session.removeAttribute("selectStatus");
                     LoggedAdmin loggedAdmin;
-                    switch (action) {
 
+                    switch (action) {
+                        //The user wants to delete an employee
                         case "Supprimer":
                             loggedAdmin = (LoggedAdmin) loggedUser;
+                            //If he selected an employee, it removes it and displays a completion message.
                             if (id > -1) {
-                                loggedAdmin.deleteEmployee(id, db);
+                                loggedAdmin.deleteEmployee(id, appAction);
                                 session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", "Suppression réussie.");
+                                session.setAttribute("selectStatus", SUPP_OK);
                             } else {
+                                //Else it displays an error.
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
+                                session.setAttribute("selectStatus", ERR_SELECT);
                             }
-
-                            session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                            // Refresh the employees list
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
                             response.sendRedirect("employeesList.jsp");
 
                             break;
-
+                        //The user wants details about an employee
                         case "Details":
                             loggedAdmin = (LoggedAdmin) loggedUser;
+                            //If he selected an employee, it displays it.
                             if (id > -1) {
                                 session.setAttribute("buttonValue", "Modifier");
-                                session.setAttribute("employe", loggedAdmin.getEmployee(id, db));
-                                session.setAttribute("selectStatus", null);
+                                session.setAttribute("employe", loggedAdmin.getEmployee(id, appAction));
+                                session.removeAttribute("selectStatus");
                                 response.sendRedirect("employeeDetails.jsp");
                             } else {
+                                //Else it displays an error message.
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Veuillez sélectionner un employé.");
-                                session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                                session.setAttribute("selectStatus", ERR_SELECT);
+                                session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
                                 response.sendRedirect("employeesList.jsp");
                             }
 
                             break;
-
+                        //The user wants to add an employee
                         case "Ajouter":
                             loggedAdmin = (LoggedAdmin) loggedUser;
+                            //If the form to create a new employee is filled, then we insert this employee in DB.
                             if (session.getAttribute("buttonValue").equals("Ajouter")) {
                                 EmployeeBean e = new EmployeeBean();
 
-                                e.setLastName(request.getParameter("lastNameInput"));
-                                e.setFirstName(request.getParameter("firstNameInput"));
-                                e.setHomePhone(request.getParameter("homePhoneInput"));
-                                e.setMobilePhone(request.getParameter("mobilePhoneInput"));
-                                e.setWorkPhone(request.getParameter("workPhoneInput"));
-                                e.setAddress(request.getParameter("addressInput"));
-                                e.setZipCode(request.getParameter("zipInput"));
-                                e.setCity(request.getParameter("cityInput"));
-                                e.setMail(request.getParameter("mailInput"));
-
+                                e.setLastName(request.getParameter(LN_FRM));
+                                e.setFirstName(request.getParameter(FN_FRM));
+                                e.setHomePhone(request.getParameter(HP_FRM));
+                                e.setMobilePhone(request.getParameter(MP_FRM));
+                                e.setWorkPhone(request.getParameter(WP_FRM));
+                                e.setAddress(request.getParameter(ADDR_FRM));
+                                e.setZipCode(request.getParameter(ZIP_FRM));
+                                e.setCity(request.getParameter(CITY_FRM));
+                                e.setMail(request.getParameter(MAIL_FRM));
+                                //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                                 if (verifyInputForm(e)) {
-                                    loggedAdmin.addEmployee(e, db);
+                                    loggedAdmin.addEmployee(e, appAction);
                                     session.setAttribute("buttonValue", "");
-                                    session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
                                     session.setAttribute("selectStatusColor", "green");
-                                    session.setAttribute("selectStatus", "Ajout réussie.");
+                                    session.setAttribute("selectStatus", ADD_OK);
                                     response.sendRedirect("employeesList.jsp");
                                 } else {
+                                    //Otherwise it displays an error message
                                     session.setAttribute("selectStatusColor", "red");
-                                    session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
-                                    session.setAttribute("employe", null);
+                                    session.setAttribute("selectStatus", FORM_KO);
+                                    session.removeAttribute("selectStatus");
                                     response.sendRedirect("employeeDetails.jsp");
                                 }
                             } else {
+                                //If the form is not filled, it redirects the user to it.
                                 session.setAttribute("buttonValue", "Ajouter");
-                                session.setAttribute("selectStatus", null);
-                                session.setAttribute("employe", null);
+                                session.removeAttribute("selectStatus");
+                                session.removeAttribute("employe");
                                 response.sendRedirect("employeeDetails.jsp");
                             }
 
                             break;
+                        //The user wants to modify an employee
                         case "Modifier":
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             EmployeeBean e = new EmployeeBean();
                             EmployeeBean oldE = (EmployeeBean) session.getAttribute("employe");
+                            //We get the informations of the oldEmployee (actually on its ID) and we create an new Employee with the new informations
                             e.setId(oldE.getId());
-                            e.setLastName(request.getParameter("lastNameInput"));
-                            e.setFirstName(request.getParameter("firstNameInput"));
-                            e.setHomePhone(request.getParameter("homePhoneInput"));
-                            e.setMobilePhone(request.getParameter("mobilePhoneInput"));
-                            e.setWorkPhone(request.getParameter("workPhoneInput"));
-                            e.setAddress(request.getParameter("addressInput"));
-                            e.setZipCode(request.getParameter("zipInput"));
-                            e.setCity(request.getParameter("cityInput"));
-                            e.setMail(request.getParameter("mailInput"));
+                            e.setLastName(request.getParameter(LN_FRM));
+                            e.setFirstName(request.getParameter(FN_FRM));
+                            e.setHomePhone(request.getParameter(HP_FRM));
+                            e.setMobilePhone(request.getParameter(MP_FRM));
+                            e.setWorkPhone(request.getParameter(WP_FRM));
+                            e.setAddress(request.getParameter(ADDR_FRM));
+                            e.setZipCode(request.getParameter(ZIP_FRM));
+                            e.setCity(request.getParameter(CITY_FRM));
+                            e.setMail(request.getParameter(MAIL_FRM));
+                            //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                             if (verifyInputForm(e)) {
-                                loggedAdmin.modifyEmployee(e, db);
-                                session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+                                loggedAdmin.modifyEmployee(e, appAction);
+                                session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
                                 session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", "Modification réussie.");
+                                session.setAttribute("selectStatus", UPDT_OK);
                                 response.sendRedirect("employeesList.jsp");
                             } else {
+                                //Otherwise it displays an error message
                                 session.setAttribute("selectStatusColor", "red");
-                                session.setAttribute("selectStatus", "Merci de remplir le formulaire avec des informations valides.");
+                                session.setAttribute("selectStatus", FORM_KO);
                                 response.sendRedirect("employeeDetails.jsp");
                             }
                             break;
-
+                        //Shows the list of employees
                         case "Voir liste":
-                            loggedAdmin = (LoggedAdmin) loggedUser;
-                            session.setAttribute("employeesList", loggedUser.getEmployeesList(db));
+
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
                             response.sendRedirect("employeesList.jsp");
 
                             break;
-
+                        //Redirect to the logout page, and removes all the session attributes
                         case "Deconnexion":
 
                             Enumeration<String> sessionsAttributeNames = session.getAttributeNames();
@@ -191,6 +213,7 @@ public class Controller extends HttpServlet {
                             response.sendRedirect("logout.jsp");
 
                             break;
+                        //Unhandled action
                         default:
                             out.println("[" + action + "]");
                     }
@@ -199,6 +222,11 @@ public class Controller extends HttpServlet {
         }
     }
 
+    /** Checker whether an employee's attributes respect what we expect.
+     * 
+     * @param e employee to check.
+     * @return boolean that indicates if the inputs are valid.
+     */
     private boolean verifyInputForm(EmployeeBean e) {
         if (e.getLastName() != null
                 && e.getFirstName() != null
@@ -222,6 +250,11 @@ public class Controller extends HttpServlet {
         return false;
     }
 
+    /** Pattern matching on number.
+     * 
+     * @param s string to check.
+     * @return a boolean that indicates if it is only numbers.
+     */
     private boolean contentJustNumber(String s) {
         return Pattern.matches("[0-9 ]*", s);
     }

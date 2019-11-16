@@ -5,9 +5,9 @@
  */
 package lsi.m1.accessModels;
 
-import lsi.m1.data.DBActions;
 import java.util.List;
 import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.data.AppActions;
 
 /**
  *
@@ -24,14 +24,26 @@ public class LoggedEmployee {
         setAccessLevel(accessLevel);
     }
     
-    public List<EmployeeBean> getEmployeesList(DBActions db){
+    /**Get the list of all the employees.
+     * 
+     * @param db Session Bean used to interact with DB.
+     * @return the list of all the employees in DB.
+     */
+    public List<EmployeeBean> getEmployeesList(AppActions db){
         return db.getEmployees();
     }
-
+    
+    /**Get access level of the logged class
+     * 
+     * @return the accessLevel
+     */
     public String getAccessLevel() {
         return accessLevel;
     }
-
+    
+    /**Set the access level by the constructor
+     * 
+     */
     private void setAccessLevel(String accessLevel) {
         this.accessLevel = accessLevel;
     }

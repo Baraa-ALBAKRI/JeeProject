@@ -39,4 +39,6 @@ public class Constants {
     public static final String ZIP_FRM =  "zipInput";
     /**Employee form - city input*/
     public static final String CITY_FRM =  "cityInput";
+    /**ُEmployee form - mail input*/
+    public static final String MAIL_FRM = "mailInput";
 }

@@ -7,9 +7,9 @@ package lsi.m1.DBmodels;
 
 
 
-/**
+/** EmployeeBean class that contains all the important attributes to read and write data from the DB
  *
- * @author nox
+ * 
  */
 public class EmployeeBean {
     private int id;
@@ -103,6 +103,4 @@ public class EmployeeBean {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
 }

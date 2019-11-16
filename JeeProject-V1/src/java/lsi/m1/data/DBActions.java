@@ -21,7 +21,7 @@ import static lsi.m1.utils.Constants.*;
  *
  * @author nox
  */
-public class DBActions implements IDBActions{
+public class DBActions implements AppActions{
 
     private Connection conn;
     private Statement stmt;
@@ -50,7 +50,8 @@ public class DBActions implements IDBActions{
         return stmt;
     }
     
-    private PreparedStatement prepareStatement(String req, String... parametres) throws SQLException{
+    private PreparedStatement prepareStatement(String req, String... parametres) 
+            throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(req);
         for(int i=0;i<parametres.length;i++)
         {
@@ -83,6 +84,11 @@ public class DBActions implements IDBActions{
         return null;
     }
 
+    /**Searches for a single employee in DB.
+     * 
+     * @param id ID of the employee to search.
+     * @return an instance of Employees if it exists in the DB, null if not.
+     */
     @Override
     public EmployeeBean getEmployee(int id) {
         rs = this.getResultSet(Query_SELECT_ONE_EMPLOYEE, Integer.toString(id));
@@ -109,7 +115,11 @@ public class DBActions implements IDBActions{
         }
          return null;
     }
-
+    
+    /**Get the list of all the employees from DB.
+     * 
+     * @return a list of type Employees that contains all the employees.
+     */
     @Override
     public ArrayList getEmployees() {
         ArrayList<EmployeeBean> employeesList;
@@ -137,19 +147,35 @@ public class DBActions implements IDBActions{
         return null;
     }
 
+    /**Removes from the DB the employee if it exists.
+     * 
+     * @param id ID of the employee to search.
+     */
     @Override
     public void deleteEmployee(int id) {
         runQuery(Query_DELETE_ONE_EMPLOYEE, Integer.toString(id));
     }
 
+    /**Updates the informations of a given employee in DB.
+     * 
+     * @param e reprensents an employeeBean.
+     */
     @Override
     public void updateEmployee(EmployeeBean e) {
-        runQuery(Query_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone(), e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode(), e.getCity(), e.getMail(), Integer.toString(e.getId()));
+        runQuery(Query_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
+                , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
+                , e.getCity(), e.getMail(), Integer.toString(e.getId()));
     }
     
+    /**Inserts a new employee in DB.
+     * 
+     * @param e reprensents an employeeBean.
+     */
     @Override
     public void insertEmployee(EmployeeBean e) {
-        runQuery(Query_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone(), e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode(), e.getCity(), e.getMail());
+        runQuery(Query_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
+                , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
+                , e.getCity(), e.getMail());
     }
 
 }

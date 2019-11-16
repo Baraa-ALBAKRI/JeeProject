@@ -1,6 +1,7 @@
 
 package lsi.m1.v2.accessModels;
 
+import lsi.m1.v2.DBmodels.AppActions;
 import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
 
@@ -16,34 +17,34 @@ public class LoggedAdmin extends LoggedEmployee {
     /**Returns an Employee from the DB using its ID.
      * 
      * @param id
-     * @param employeeSB used to interact with the DB.
+     * @param appActions used to interact with the DB.
      * @return the employee if it exists, else null.
      */
-    public Employees getEmployee(int id, EmployeeSB employeeSB){
-        return employeeSB.getEmployee(id);
+    public Employees getEmployee(int id, AppActions appActions){
+        return appActions.getEmployee(id);
     }
     /**Deletes an Employee from its ID in DB.
      * 
      * @param id
-     * @param employeeSB used to interact with the DB. 
+     * @param appActions used to interact with the DB. 
      */
-    public void deleteEmployee(int id, EmployeeSB employeeSB) {
-        employeeSB.deleteEmployee(id);
+    public void deleteEmployee(int id, AppActions appActions) {
+        appActions.deleteEmployee(id);
     }
      /**Updates an employee in DB.
      * 
      * @param e
-     * @param employeeSB used to interact with the DB. 
+     * @param appActions used to interact with the DB. 
      */
-    public void modifyEmployee(Employees e, EmployeeSB employeeSB) {
-        employeeSB.modifyEmployee(e);
+    public void modifyEmployee(Employees e, AppActions appActions) {
+        appActions.updateEmployee(e);
     }
     /**Inserts an employee in DB.
      * 
      * @param e
-     * @param employeeSB used to interact with the DB. 
+     * @param appActions used to interact with the DB. 
      */
-    public void addEmployee(Employees e, EmployeeSB employeeSB) {
-        employeeSB.insertEmployee(e);
+    public void addEmployee(Employees e, AppActions appActions) {
+        appActions.insertEmployee(e);
     }
 }

@@ -12,7 +12,7 @@ import javax.persistence.Query;
  *  It is used to interact with our database (CRUD).
  */
 @Stateless
-public class EmployeeSB {
+public class EmployeeSB implements AppActions{
     /** Represents the persistence context.
      * 
      *  The entity manager handles the transactions (begin/commit/stop) for the developper.
@@ -24,6 +24,7 @@ public class EmployeeSB {
      * 
      * @return a list of type Employees that contains all the employees.
      */
+    @Override
     public List getEmployees(){
         Query q = em.createQuery("SELECT e FROM Employees e");
         return q.getResultList();
@@ -34,6 +35,7 @@ public class EmployeeSB {
      * @param id ID of the employee to search.
      * @return an instance of Employees if it exists in the DB, null if not.
      */
+    @Override
     public Employees getEmployee(int id){
         return em.find(Employees.class, id);
     }
@@ -42,6 +44,7 @@ public class EmployeeSB {
      * 
      * @param id ID of the employee to search.
      */
+    @Override
     public void deleteEmployee(int id){
         Employees emp = getEmployee(id);
         em.remove(emp);
@@ -51,7 +54,8 @@ public class EmployeeSB {
      * 
      * @param e reprensents an employee.
      */
-    public void modifyEmployee(Employees e){
+    @Override
+    public void updateEmployee(Employees e){
         Employees emp = getEmployee(e.getId());
         emp.setLastname(e.getLastname());
         emp.setFirstname(e.getFirstname());
@@ -68,6 +72,7 @@ public class EmployeeSB {
      * 
      * @param e reprensents an employee.
      */
+    @Override
     public void insertEmployee(Employees e) {
         em.persist(e);
     }
