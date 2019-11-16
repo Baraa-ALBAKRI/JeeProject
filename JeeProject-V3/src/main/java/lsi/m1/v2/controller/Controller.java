@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package lsi.m1.v2.controller;
 
 import java.io.IOException;
@@ -11,6 +7,8 @@ import java.util.Enumeration;
 import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +23,16 @@ import lsi.m1.v2.accessModels.LoggedEmployee;
  * Controller class from the JEE Web Application
  *
  */
+@WebServlet(
+        name = "Controller",
+        urlPatterns = "/Controller",
+        initParams = {
+            @WebInitParam(name = "loginAdmin", value = "admin"),
+            @WebInitParam(name = "passwordAdmin", value = "admin"),
+            @WebInitParam(name = "loginEmployee", value = "empl"),
+            @WebInitParam(name = "passwordEmployee", value = "empl")
+        }
+)
 public class Controller extends HttpServlet {
 
     @EJB
@@ -46,6 +54,7 @@ public class Controller extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             session = request.getSession();
+
             //By default, the logged user is an employee.
             LoggedEmployee loggedUser = (LoggedEmployee) session.getAttribute("loggedUser");
 
@@ -58,12 +67,12 @@ public class Controller extends HttpServlet {
                 if (login == null || password == null) {
                     session.setAttribute("errKey", ERR_LOGIN);
                     response.sendRedirect("login.jsp");
-                } else if (login.equals(getServletContext().getInitParameter("loginAdmin")) && password.equals(getServletContext().getInitParameter("passwordAdmin"))) {
+                } else if (login.equals(getServletConfig().getInitParameter("loginAdmin")) && password.equals(getServletConfig().getInitParameter("passwordAdmin"))) {
                     //If it corresponds to the login information of an Admin then the loggedUser becomes an admin.
                     loggedUser = new LoggedAdmin();
                     session.setAttribute("loggedUser", loggedUser);
                     session.removeAttribute("errKey");
-                } else if (login.equals(getServletContext().getInitParameter("loginEmployee")) && password.equals(getServletContext().getInitParameter("passwordEmployee"))) {
+                } else if (login.equals(getServletConfig().getInitParameter("loginEmployee")) && password.equals(getServletConfig().getInitParameter("passwordEmployee"))) {
                     //If it corresponds to the login information of an Employee then the loggedUser becomes an Employee.
                     loggedUser = new LoggedEmployee();
                     session.setAttribute("loggedUser", loggedUser);
@@ -77,6 +86,7 @@ public class Controller extends HttpServlet {
                 } else {
                     //Otherwise, it displays the list of employees (redirection to employeeList.jsp
                     session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
+                   
                     response.sendRedirect("employeesList.jsp");
                 }
             } else {
