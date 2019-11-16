@@ -81,10 +81,10 @@ public class Controller extends HttpServlet {
                 }
             } else {
                 //If the user is already logged, we react to his actions.
-                String action = request.getParameter("button");
+                String action = request.getParameter(BTN_NAME);
                 if (action != null) {
                     //Trying to get the selected employee's ID.
-                    int id = Integer.parseInt(request.getParameter("selector") != null ? request.getParameter("selector") : "-1");
+                    int id = Integer.parseInt(request.getParameter(RADIO_BTN) != null ? request.getParameter(RADIO_BTN) : "-1");
                     session.removeAttribute("selectStatus");
                     LoggedAdmin loggedAdmin;
 
@@ -132,15 +132,15 @@ public class Controller extends HttpServlet {
                             if (session.getAttribute("buttonValue").equals("Ajouter")) {
                                 Employees e = new Employees();
 
-                                e.setLastname(request.getParameter("lastNameInput"));
-                                e.setFirstname(request.getParameter("firstNameInput"));
-                                e.setHomephone(request.getParameter("homePhoneInput"));
-                                e.setMobilephone(request.getParameter("mobilePhoneInput"));
-                                e.setWorkphone(request.getParameter("workPhoneInput"));
-                                e.setAddress(request.getParameter("addressInput"));
-                                e.setZipcode(request.getParameter("zipInput"));
-                                e.setCity(request.getParameter("cityInput"));
-                                e.setMail(request.getParameter("mailInput"));
+                                e.setLastname(request.getParameter(LN_FRM));
+                                e.setFirstname(request.getParameter(FN_FRM));
+                                e.setHomephone(request.getParameter(HP_FRM));
+                                e.setMobilephone(request.getParameter(MP_FRM));
+                                e.setWorkphone(request.getParameter(WP_FRM));
+                                e.setAddress(request.getParameter(ADDR_FRM));
+                                e.setZipcode(request.getParameter(ZIP_FRM));
+                                e.setCity(request.getParameter(CITY_FRM));
+                                e.setMail(request.getParameter(MAIL_FRM));
                                 //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                                 if (verifyInputForm(e)) {
                                     loggedAdmin.addEmployee(e, employeeSB);
@@ -172,15 +172,15 @@ public class Controller extends HttpServlet {
                             Employees oldE = (Employees) session.getAttribute("employe");
                             //We get the informations of the oldEmployee (actually on its ID) and we create an new Employee with the new informations
                             e.setId(oldE.getId());
-                            e.setLastname(request.getParameter("lastNameInput"));
-                            e.setFirstname(request.getParameter("firstNameInput"));
-                            e.setHomephone(request.getParameter("homePhoneInput"));
-                            e.setMobilephone(request.getParameter("mobilePhoneInput"));
-                            e.setWorkphone(request.getParameter("workPhoneInput"));
-                            e.setAddress(request.getParameter("addressInput"));
-                            e.setZipcode(request.getParameter("zipInput"));
-                            e.setCity(request.getParameter("cityInput"));
-                            e.setMail(request.getParameter("mailInput"));
+                            e.setLastname(request.getParameter(LN_FRM));
+                                e.setFirstname(request.getParameter(FN_FRM));
+                                e.setHomephone(request.getParameter(HP_FRM));
+                                e.setMobilephone(request.getParameter(MP_FRM));
+                                e.setWorkphone(request.getParameter(WP_FRM));
+                                e.setAddress(request.getParameter(ADDR_FRM));
+                                e.setZipcode(request.getParameter(ZIP_FRM));
+                                e.setCity(request.getParameter(CITY_FRM));
+                                e.setMail(request.getParameter(MAIL_FRM));
                             //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                             if (verifyInputForm(e)) {
                                 loggedAdmin.modifyEmployee(e, employeeSB);
@@ -222,7 +222,11 @@ public class Controller extends HttpServlet {
             }
         }
     }
-
+    /** Checker whether an employee's attributes respect what we expect.
+     * 
+     * @param e employee to check.
+     * @return boolean that indicates if the inputs are valid.
+     */
     private boolean verifyInputForm(Employees e) {
         if (e.getLastname() != null
                 && e.getFirstname() != null
@@ -245,7 +249,11 @@ public class Controller extends HttpServlet {
         }
         return false;
     }
-
+    /** Pattern matching on number.
+     * 
+     * @param s string to check.
+     * @return a boolean that indicates if it is only numbers.
+     */
     private boolean contentJustNumber(String s) {
         return Pattern.matches("[0-9 ]*", s);
     }
