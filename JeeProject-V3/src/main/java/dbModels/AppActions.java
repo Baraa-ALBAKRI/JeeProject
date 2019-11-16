@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lsi.m1.v2.DBmodels;
+package dbModels;
 
+import entities.Employees;
 import java.util.List;
 
 /**

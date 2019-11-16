@@ -1,9 +1,8 @@
 
-package lsi.m1.v2.accessModels;
+package accessModels;
 
-import lsi.m1.v2.DBmodels.AppActions;
-import lsi.m1.v2.DBmodels.EmployeeSB;
-import lsi.m1.v2.DBmodels.Employees;
+import dbModels.AppActions;
+import entities.Employees;
 
 /**Represents a logged administator.
  * An admin has the full control on the DB.

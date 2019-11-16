@@ -1,4 +1,4 @@
-package lsi.m1.utils;
+package utils;
 
 /** Constants such as inputs' names or response messages.
  */
@@ -41,4 +41,6 @@ public class Constants {
     public static final String CITY_FRM =  "cityInput";
     /**ُEmployee form - mail input*/
     public static final String MAIL_FRM = "mailInput";
+    /** REST API URL LIST*/
+    public static final String REST_URL_LIST = "http://localhost:8080/JeeProject-V3/webresources/entities.employees";
 }

@@ -1,11 +1,14 @@
-
-package lsi.m1.v2.controller;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import static lsi.m1.utils.Constants.*;
-import lsi.m1.v2.DBmodels.AppActions;
-import lsi.m1.v2.DBmodels.Employees;
-import lsi.m1.v2.accessModels.LoggedAdmin;
-import lsi.m1.v2.accessModels.LoggedEmployee;
+import static utils.Constants.*;
+import dbModels.AppActions;
+import entities.Employees;
+import dbModels.RestfulApiCaller;
+import accessModels.LoggedAdmin;
+import accessModels.LoggedEmployee;
 
 /**
  * Controller class from the JEE Web Application
@@ -35,7 +39,6 @@ import lsi.m1.v2.accessModels.LoggedEmployee;
 )
 public class Controller extends HttpServlet {
 
-    @EJB
     private AppActions appActions;
     HttpSession session;
 
@@ -52,9 +55,8 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
+            appActions = new RestfulApiCaller();
             session = request.getSession();
-
             //By default, the logged user is an employee.
             LoggedEmployee loggedUser = (LoggedEmployee) session.getAttribute("loggedUser");
 
@@ -86,7 +88,6 @@ public class Controller extends HttpServlet {
                 } else {
                     //Otherwise, it displays the list of employees (redirection to employeeList.jsp
                     session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
-                   
                     response.sendRedirect("employeesList.jsp");
                 }
             } else {
