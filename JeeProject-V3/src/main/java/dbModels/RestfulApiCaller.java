@@ -78,20 +78,35 @@ public class RestfulApiCaller implements AppActions {
         return employees;
     }
 
-    private String xmlWriter(Employees e) {
+    private String xmlWriter(Employees e, boolean isUpdate) {
         String xml;
 
-        xml = "<employees>"
-                + "<address>" + e.getAddress() + "</address>"
-                + "<city>" + e.getCity() + "</city>"
-                + "<firstname>" + e.getFirstname() + "</firstname>"
-                + "<homephone>" + e.getHomephone() + "</homephone>"
-                + "<lastname>" + e.getLastname() + "</lastname>"
-                + "<mail>" + e.getMail() + "</mail>"
-                + "<mobilephone>" + e.getMobilephone() + "</mobilephone>"
-                + "<workphone>" + e.getWorkphone() + "</workphone>"
-                + "<zipcode>" + e.getZipcode() + "</zipcode>"
-                + "</employees>";
+        if (isUpdate) {
+            xml = "<employees>"
+                    + "<address>" + e.getAddress() + "</address>"
+                    + "<city>" + e.getCity() + "</city>"
+                    + "<firstname>" + e.getFirstname() + "</firstname>"
+                    + "<homephone>" + e.getHomephone() + "</homephone>"
+                    + "<id>" + e.getId() + "</id>"
+                    + "<lastname>" + e.getLastname() + "</lastname>"
+                    + "<mail>" + e.getMail() + "</mail>"
+                    + "<mobilephone>" + e.getMobilephone() + "</mobilephone>"
+                    + "<workphone>" + e.getWorkphone() + "</workphone>"
+                    + "<zipcode>" + e.getZipcode() + "</zipcode>"
+                    + "</employees>";
+        } else {
+            xml = "<employees>"
+                    + "<address>" + e.getAddress() + "</address>"
+                    + "<city>" + e.getCity() + "</city>"
+                    + "<firstname>" + e.getFirstname() + "</firstname>"
+                    + "<homephone>" + e.getHomephone() + "</homephone>"
+                    + "<lastname>" + e.getLastname() + "</lastname>"
+                    + "<mail>" + e.getMail() + "</mail>"
+                    + "<mobilephone>" + e.getMobilephone() + "</mobilephone>"
+                    + "<workphone>" + e.getWorkphone() + "</workphone>"
+                    + "<zipcode>" + e.getZipcode() + "</zipcode>"
+                    + "</employees>";
+        }
 
         return xml;
     }
@@ -100,18 +115,30 @@ public class RestfulApiCaller implements AppActions {
         try {
             URL u = new URL(url);
             conn = (HttpURLConnection) u.openConnection();
-
+            conn.setUseCaches(false);
+            conn.setReadTimeout(1000);
             switch (method) {
                 case "GET":
+                    conn.setRequestMethod(HttpMethod.GET);
                     conn.setRequestProperty("Accept", "application/xml");
                     break;
                 case "POST":
+                    conn.setRequestMethod(HttpMethod.POST);
                     conn.setDoOutput(true);
-                    conn.setRequestProperty("Content-Type", "application/xml");
-
+                    conn.setConnectTimeout(1000);
+                    conn.setRequestProperty("Content-Type", MediaType.APPLICATION_XML);
+                    conn.setRequestProperty("Accept", MediaType.APPLICATION_XML);
+                    break;
+                case "DELETE":
+                    conn.setRequestMethod(HttpMethod.DELETE);
+                    conn.setRequestProperty("Accept", "application/xml");
+                    break;
+                case "PUT":
+                    conn.setRequestMethod(HttpMethod.PUT);
+                    conn.setDoOutput(true);
+                    conn.setRequestProperty("Content-Type", MediaType.APPLICATION_XML);
                     break;
             }
-            conn.setRequestMethod(method);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,37 +161,41 @@ public class RestfulApiCaller implements AppActions {
 
     @Override
     public void updateEmployee(Employees e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        try {
+            changeConnexion(REST_URL_LIST + "/" + e.getId(), "PUT");
+
+            final OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(xmlWriter(e, true).getBytes());
+            outputStream.flush();
+            if (conn.getResponseCode() != 204) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+            final DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            dataOutputStream.close();
+            conn.disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
     public void insertEmployee(Employees e) {
 
         try {
-            URL u = new URL(REST_URL_LIST);
-            conn = (HttpURLConnection) u.openConnection();
-            //changeConnexion(REST_URL_LIST, "POST");
-            conn.setConnectTimeout(1000);
-
-            conn.setRequestMethod(HttpMethod.POST);
-
-            conn.setRequestProperty("Content-Type", MediaType.APPLICATION_XML);
-            conn.setRequestProperty("Accept", MediaType.APPLICATION_XML);
-
-            conn.setUseCaches(false);
-            conn.setDoOutput(true);
+            changeConnexion(REST_URL_LIST, "POST");
 
             final OutputStream outputStream = conn.getOutputStream();
-            outputStream.write(xmlWriter(e).getBytes());
+            outputStream.write(xmlWriter(e, false).getBytes());
             outputStream.flush();
             if (conn.getResponseCode() != 204) {
                 throw new RuntimeException("Failed : HTTP error code : "
-                    + conn.getResponseCode());
+                        + conn.getResponseCode());
             }
             final DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             dataOutputStream.close();
-            //conn.getOutputStream().write(xmlWriter(e).getBytes());
-            //conn.getOutputStream().flush();
             conn.disconnect();
         } catch (IOException ex) {
             Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
