@@ -40,15 +40,6 @@ public class DBActions implements AppActions{
             Logger.getLogger(DBActions.class.getName()).log(Level.SEVERE, null, sqle);
         }
     }
-
-    private Statement getStatement() {
-        try {
-            stmt = conn.createStatement();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return stmt;
-    }
     
     private PreparedStatement prepareStatement(String req, String... parametres) 
             throws SQLException{
@@ -91,7 +82,7 @@ public class DBActions implements AppActions{
      */
     @Override
     public EmployeeBean getEmployee(int id) {
-        rs = this.getResultSet(Query_SELECT_ONE_EMPLOYEE, Integer.toString(id));
+        rs = this.getResultSet(QUERY_SELECT_ONE_EMPLOYEE, Integer.toString(id));
          try {
             if(rs.next())
             {
@@ -124,7 +115,7 @@ public class DBActions implements AppActions{
     public ArrayList getEmployees() {
         ArrayList<EmployeeBean> employeesList;
         employeesList = new ArrayList<>();
-        rs = this.getResultSet(Query_SELECT_ALL_EMPLOYEES);
+        rs = this.getResultSet(QUERY_SELECT_ALL_EMPLOYEES);
         try {
             while (rs.next()) {
                 EmployeeBean e = new EmployeeBean();
@@ -153,7 +144,7 @@ public class DBActions implements AppActions{
      */
     @Override
     public void deleteEmployee(int id) {
-        runQuery(Query_DELETE_ONE_EMPLOYEE, Integer.toString(id));
+        runQuery(QUERY_DELETE_ONE_EMPLOYEE, Integer.toString(id));
     }
 
     /**Updates the informations of a given employee in DB.
@@ -162,7 +153,7 @@ public class DBActions implements AppActions{
      */
     @Override
     public void updateEmployee(EmployeeBean e) {
-        runQuery(Query_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
+        runQuery(QUERY_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
                 , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
                 , e.getCity(), e.getMail(), Integer.toString(e.getId()));
     }
@@ -173,7 +164,7 @@ public class DBActions implements AppActions{
      */
     @Override
     public void insertEmployee(EmployeeBean e) {
-        runQuery(Query_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
+        runQuery(QUERY_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
                 , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
                 , e.getCity(), e.getMail());
     }

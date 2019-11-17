@@ -43,4 +43,10 @@ public class Constants {
     public static final String MAIL_FRM = "mailInput";
     /** REST API URL LIST*/
     public static final String REST_URL_LIST = "http://localhost:8080/JeeProject-V3/webresources/entities.employees";
+    /**Error (employee don't exist) message*/
+    public static final String ERR_DONT_EXIST = "L'employé n'existe plus.";
+    /**Faild (modify) message*/
+    public static final String UPDT_KO =  "Modification échouée car l'employé n'existe plus.";
+    /**Faild (delete) message*/
+    public static final String SUPP_KO = "Suppression échouée car l'employé n'existe plus.";
 }

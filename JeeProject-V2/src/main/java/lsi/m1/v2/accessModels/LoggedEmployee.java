@@ -3,7 +3,6 @@ package lsi.m1.v2.accessModels;
 
 import java.util.List;
 import lsi.m1.v2.DBmodels.AppActions;
-import lsi.m1.v2.DBmodels.EmployeeSB;
 import lsi.m1.v2.DBmodels.Employees;
 
 /**Represents a logged Employee.

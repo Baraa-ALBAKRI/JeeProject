@@ -43,7 +43,7 @@ public class Controller extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            AppActions appAction = new DBActions();
+            AppActions appActions = new DBActions();
             session = request.getSession();
             //By default, the logged user is an employee.
             LoggedEmployee loggedUser = (LoggedEmployee) session.getAttribute("loggedUser");
@@ -75,7 +75,7 @@ public class Controller extends HttpServlet {
                     response.sendRedirect("login.jsp");
                 } else {
                     //Otherwise, it displays the list of employees (redirection to employeeList.jsp
-                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
+                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                     response.sendRedirect("employeesList.jsp");
                 }
             } else {
@@ -93,16 +93,21 @@ public class Controller extends HttpServlet {
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             //If he selected an employee, it removes it and displays a completion message.
                             if (id > -1) {
-                                loggedAdmin.deleteEmployee(id, appAction);
-                                session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", SUPP_OK);
+                                if(loggedAdmin.deleteEmployee(id, appActions)){
+                                    session.setAttribute("selectStatusColor", "green");
+                                    session.setAttribute("selectStatus", SUPP_OK);
+                                }
+                                else{
+                                    session.setAttribute("selectStatusColor", "red");
+                                    session.setAttribute("selectStatus", SUPP_KO);
+                                }
                             } else {
                                 //Else it displays an error.
                                 session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", ERR_SELECT);
                             }
                             // Refresh the employees list
-                            session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                             response.sendRedirect("employeesList.jsp");
 
                             break;
@@ -111,18 +116,26 @@ public class Controller extends HttpServlet {
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             //If he selected an employee, it displays it.
                             if (id > -1) {
-                                session.setAttribute("buttonValue", "Modifier");
-                                session.setAttribute("employe", loggedAdmin.getEmployee(id, appAction));
-                                session.removeAttribute("selectStatus");
-                                response.sendRedirect("employeeDetails.jsp");
+                                EmployeeBean e = loggedAdmin.getEmployee(id, appActions);
+                                if(e != null){
+                                    session.setAttribute("buttonValue", "Modifier");
+                                    session.setAttribute("employe", e);
+                                    session.removeAttribute("selectStatus");
+                                    response.sendRedirect("employeeDetails.jsp");
+                                }
+                                else{
+                                    session.setAttribute("selectStatus", ERR_DONT_EXIST);
+                                    session.setAttribute("selectStatusColor", "red");
+                                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
+                                    response.sendRedirect("employeesList.jsp");
+                                }
                             } else {
                                 //Else it displays an error message.
-                                session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", ERR_SELECT);
-                                session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
+                                session.setAttribute("selectStatusColor", "red");
+                                session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                                 response.sendRedirect("employeesList.jsp");
                             }
-
                             break;
                         //The user wants to add an employee
                         case "Ajouter":
@@ -142,9 +155,9 @@ public class Controller extends HttpServlet {
                                 e.setMail(request.getParameter(MAIL_FRM));
                                 //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                                 if (verifyInputForm(e)) {
-                                    loggedAdmin.addEmployee(e, appAction);
+                                    loggedAdmin.addEmployee(e, appActions);
                                     session.setAttribute("buttonValue", "");
-                                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
+                                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                                     session.setAttribute("selectStatusColor", "green");
                                     session.setAttribute("selectStatus", ADD_OK);
                                     response.sendRedirect("employeesList.jsp");
@@ -182,10 +195,14 @@ public class Controller extends HttpServlet {
                             e.setMail(request.getParameter(MAIL_FRM));
                             //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                             if (verifyInputForm(e)) {
-                                loggedAdmin.modifyEmployee(e, appAction);
-                                session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
-                                session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", UPDT_OK);
+                                if(loggedAdmin.modifyEmployee(e, appActions)){
+                                    session.setAttribute("selectStatusColor", "green");
+                                    session.setAttribute("selectStatus", UPDT_OK);
+                                }else{
+                                    session.setAttribute("selectStatusColor", "red");
+                                    session.setAttribute("selectStatus", UPDT_KO);
+                                }
+                                session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                                 response.sendRedirect("employeesList.jsp");
                             } else {
                                 //Otherwise it displays an error message
@@ -197,7 +214,7 @@ public class Controller extends HttpServlet {
                         //Shows the list of employees
                         case "Voir liste":
 
-                            session.setAttribute("employeesList", loggedUser.getEmployeesList(appAction));
+                            session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                             response.sendRedirect("employeesList.jsp");
 
                             break;

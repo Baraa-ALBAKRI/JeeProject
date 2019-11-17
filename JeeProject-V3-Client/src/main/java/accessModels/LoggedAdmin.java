@@ -26,17 +26,27 @@ public class LoggedAdmin extends LoggedEmployee {
      * 
      * @param id
      * @param appActions used to interact with the DB. 
+     * @return delete status
      */
-    public void deleteEmployee(int id, AppActions appActions) {
-        appActions.deleteEmployee(id);
+    public boolean deleteEmployee(int id, AppActions appActions) {
+        if(appActions.getEmployee(id) != null){
+            appActions.deleteEmployee(id);
+            return true;
+        }
+        return false;
     }
      /**Updates an employee in DB.
      * 
      * @param e
      * @param appActions used to interact with the DB. 
+     * @return modification status
      */
-    public void modifyEmployee(Employees e, AppActions appActions) {
-        appActions.updateEmployee(e);
+    public boolean modifyEmployee(Employees e, AppActions appActions) {
+        if(appActions.getEmployee(e.getId()) != null){
+            appActions.updateEmployee(e);
+            return true;
+        }
+        return false;
     }
     /**Inserts an employee in DB.
      * 
