@@ -153,7 +153,7 @@ public class Controller extends HttpServlet {
                                     //Otherwise it displays an error message
                                     session.setAttribute("selectStatusColor", "red");
                                     session.setAttribute("selectStatus", FORM_KO);
-                                    session.removeAttribute("selectStatus");
+                                    session.removeAttribute("employe");
                                     response.sendRedirect("employeeDetails.jsp");
                                 }
                             } else {
