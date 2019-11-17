@@ -6,7 +6,7 @@
 package lsi.m1.accessModels;
 
 import java.util.List;
-import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.DBmodels.Employees;
 import lsi.m1.data.AppActions;
 
 /**
@@ -29,7 +29,7 @@ public class LoggedEmployee {
      * @param db Session Bean used to interact with DB.
      * @return the list of all the employees in DB.
      */
-    public List<EmployeeBean> getEmployeesList(AppActions db){
+    public List<Employees> getEmployeesList(AppActions db){
         return db.getEmployees();
     }
     

@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.DBmodels.Employees;
 import static lsi.m1.utils.Constants.*;
 
 /**
@@ -81,12 +81,12 @@ public class DBActions implements AppActions{
      * @return an instance of Employees if it exists in the DB, null if not.
      */
     @Override
-    public EmployeeBean getEmployee(int id) {
+    public Employees getEmployee(int id) {
         rs = this.getResultSet(QUERY_SELECT_ONE_EMPLOYEE, Integer.toString(id));
          try {
             if(rs.next())
             {
-                EmployeeBean e = new EmployeeBean();
+                Employees e = new Employees();
                 e.setId(rs.getInt("ID"));
                 e.setLastName(rs.getString("LASTNAME"));
                 e.setFirstName(rs.getString("FIRSTNAME"));
@@ -102,7 +102,7 @@ public class DBActions implements AppActions{
             else
                 return null;
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Employees.class.getName()).log(Level.SEVERE, null, ex);
         }
          return null;
     }
@@ -113,12 +113,12 @@ public class DBActions implements AppActions{
      */
     @Override
     public ArrayList getEmployees() {
-        ArrayList<EmployeeBean> employeesList;
+        ArrayList<Employees> employeesList;
         employeesList = new ArrayList<>();
         rs = this.getResultSet(QUERY_SELECT_ALL_EMPLOYEES);
         try {
             while (rs.next()) {
-                EmployeeBean e = new EmployeeBean();
+                Employees e = new Employees();
                 e.setId(rs.getInt("ID"));
                 e.setLastName(rs.getString("LASTNAME"));
                 e.setFirstName(rs.getString("FIRSTNAME"));
@@ -133,7 +133,7 @@ public class DBActions implements AppActions{
             }
             return employeesList;
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Employees.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -152,7 +152,7 @@ public class DBActions implements AppActions{
      * @param e reprensents an employeeBean.
      */
     @Override
-    public void updateEmployee(EmployeeBean e) {
+    public void updateEmployee(Employees e) {
         runQuery(QUERY_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
                 , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
                 , e.getCity(), e.getMail(), Integer.toString(e.getId()));
@@ -163,7 +163,7 @@ public class DBActions implements AppActions{
      * @param e reprensents an employeeBean.
      */
     @Override
-    public void insertEmployee(EmployeeBean e) {
+    public void insertEmployee(Employees e) {
         runQuery(QUERY_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
                 , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
                 , e.getCity(), e.getMail());

@@ -5,7 +5,7 @@
  */
 package lsi.m1.accessModels;
 
-import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.DBmodels.Employees;
 import lsi.m1.data.AppActions;
 
 /**
@@ -23,7 +23,7 @@ public class LoggedAdmin extends LoggedEmployee {
      * @param appActions used to interact with the DB.
      * @return the employee if it exists, else null.
      */
-    public EmployeeBean getEmployee(int id, AppActions appActions){
+    public Employees getEmployee(int id, AppActions appActions){
         return appActions.getEmployee(id);
     }
     /**Deletes an Employee from its ID in DB.
@@ -45,7 +45,7 @@ public class LoggedAdmin extends LoggedEmployee {
      * @param appActions used to interact with the DB. 
      * @return modification status
      */
-    public boolean modifyEmployee(EmployeeBean e, AppActions appActions) {
+    public boolean modifyEmployee(Employees e, AppActions appActions) {
         if(appActions.getEmployee(e.getId()) != null){
             appActions.updateEmployee(e);
             return true;
@@ -57,7 +57,7 @@ public class LoggedAdmin extends LoggedEmployee {
      * @param e
      * @param appActions used to interact with the DB. 
      */
-    public void addEmployee(EmployeeBean e, AppActions appActions) {
+    public void addEmployee(Employees e, AppActions appActions) {
         appActions.insertEmployee(e);
     }
 }

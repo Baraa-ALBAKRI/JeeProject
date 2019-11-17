@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import lsi.m1.data.DBActions;
-import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.DBmodels.Employees;
 import lsi.m1.accessModels.LoggedAdmin;
 import lsi.m1.accessModels.LoggedEmployee;
 import lsi.m1.data.AppActions;
@@ -116,7 +116,7 @@ public class Controller extends HttpServlet {
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             //If he selected an employee, it displays it.
                             if (id > -1) {
-                                EmployeeBean e = loggedAdmin.getEmployee(id, appActions);
+                                Employees e = loggedAdmin.getEmployee(id, appActions);
                                 if(e != null){
                                     session.setAttribute("buttonValue", "Modifier");
                                     session.setAttribute("employe", e);
@@ -142,7 +142,7 @@ public class Controller extends HttpServlet {
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             //If the form to create a new employee is filled, then we insert this employee in DB.
                             if (session.getAttribute("buttonValue").equals("Ajouter")) {
-                                EmployeeBean e = new EmployeeBean();
+                                Employees e = new Employees();
 
                                 e.setLastName(request.getParameter(LN_FRM));
                                 e.setFirstName(request.getParameter(FN_FRM));
@@ -180,8 +180,8 @@ public class Controller extends HttpServlet {
                         //The user wants to modify an employee
                         case "Modifier":
                             loggedAdmin = (LoggedAdmin) loggedUser;
-                            EmployeeBean e = new EmployeeBean();
-                            EmployeeBean oldE = (EmployeeBean) session.getAttribute("employe");
+                            Employees e = new Employees();
+                            Employees oldE = (Employees) session.getAttribute("employe");
                             //We get the informations of the oldEmployee (actually on its ID) and we create an new Employee with the new informations
                             e.setId(oldE.getId());
                             e.setLastName(request.getParameter(LN_FRM));
@@ -244,7 +244,7 @@ public class Controller extends HttpServlet {
      * @param e employee to check.
      * @return boolean that indicates if the inputs are valid.
      */
-    private boolean verifyInputForm(EmployeeBean e) {
+    private boolean verifyInputForm(Employees e) {
         if (e.getLastName() != null
                 && e.getFirstName() != null
                 && e.getHomePhone() != null
