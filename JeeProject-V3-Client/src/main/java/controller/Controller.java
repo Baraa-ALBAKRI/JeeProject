@@ -82,9 +82,11 @@ public class Controller extends HttpServlet {
                 }
                 //If no user can be logged, it displays an error message and goes back to the login page.
                 if (loggedUser == null) {
-                    session.removeAttribute("loginLevel");
-                    session.setAttribute("errKey", ERR_LOGIN);
-                    response.sendRedirect("login.jsp");
+                    if(!response.isCommitted()){
+                        session.removeAttribute("loginLevel");
+                        session.setAttribute("errKey", ERR_LOGIN);
+                        response.sendRedirect("login.jsp");
+                    }
                 } else {
                     //Otherwise, it displays the list of employees (redirection to employeeList.jsp
                     session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));

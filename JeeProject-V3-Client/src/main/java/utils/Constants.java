@@ -42,7 +42,7 @@ public class Constants {
     /**ُEmployee form - mail input*/
     public static final String MAIL_FRM = "mailInput";
     /** REST API URL LIST*/
-    public static final String REST_URL_LIST = "http://localhost:8080/JeeProject-V3/webresources/entities.employees";
+    public static final String REST_URL_LIST = "http://localhost:8080/JeeProject-V3-Server/webresources/entities.employees";
     /**Error (employee don't exist) message*/
     public static final String ERR_DONT_EXIST = "L'employé n'existe plus.";
     /**Faild (modify) message*/
