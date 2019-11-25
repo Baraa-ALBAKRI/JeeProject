@@ -9,8 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
- *
- * @author nicob
+ * AbstractFacade class (auto generated)
  */
 public abstract class AbstractFacade<T> {
 

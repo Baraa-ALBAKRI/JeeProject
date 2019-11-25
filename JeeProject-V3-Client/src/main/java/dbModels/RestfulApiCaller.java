@@ -4,11 +4,8 @@ import entities.Employees;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,12 +20,21 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import utils.AppException;
 import static utils.Constants.*;
 
+/**
+ * RestfulApiCaller Class is used to manage the API calls with the server
+ * 
+ */
 public class RestfulApiCaller implements AppActions {
 
     private HttpURLConnection conn;
 
+    /**
+     * 
+     * Read an XML string and fill up a employees list
+     */
     private List<Employees> xmlReader(InputStream is) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
@@ -65,12 +71,17 @@ public class RestfulApiCaller implements AppActions {
             }
 
         } catch (ParserConfigurationException | SAXException | IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
-
         return employees;
     }
 
+    /**
+     * Generate a XML from an employee object
+     * @param e the employees object
+     * @param isUpdate add the id value in the XML or not
+     * @return the XML
+     */
     private String xmlWriter(Employees e, boolean isUpdate) {
         String xml;
 
@@ -104,6 +115,11 @@ public class RestfulApiCaller implements AppActions {
         return xml;
     }
 
+    /**
+     * prepare the connection to make an API call
+     * @param url the API url
+     * @param method the type of the call
+     */
     private void changeConnexion(String url, String method) {
         try {
             URL u = new URL(url);
@@ -133,25 +149,30 @@ public class RestfulApiCaller implements AppActions {
                     break;
             }
 
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
     }
 
+    /**
+     * Call the delete API to remove an employee
+     * @param id the id of the employee to delete
+     */
     @Override
     public void deleteEmployee(int id) {
         try {
             changeConnexion(REST_URL_LIST + "/" + id + "/", "DELETE");
-            List<Employees> employees;
-            employees = xmlReader(conn.getInputStream());
+            xmlReader(conn.getInputStream());
             conn.disconnect();
         } catch (IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
     }
 
+    /**
+     * Call the update API and modify the infotmation of an employee
+     * @param e the id of the employee to modify
+     */
     @Override
     public void updateEmployee(Employees e) {
 
@@ -169,11 +190,15 @@ public class RestfulApiCaller implements AppActions {
             dataOutputStream.close();
             conn.disconnect();
         } catch (IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
 
     }
 
+    /**
+     * Call the insert API to add a new employee
+     * @param e the employee to add
+     */
     @Override
     public void insertEmployee(Employees e) {
 
@@ -191,11 +216,16 @@ public class RestfulApiCaller implements AppActions {
             dataOutputStream.close();
             conn.disconnect();
         } catch (IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
 
     }
 
+    /**
+     * Get the information of one employee specific
+     * @param id the id of the employee
+     * @return the employee
+     */
     @Override
     public Employees getEmployee(int id) {
         try {
@@ -203,18 +233,22 @@ public class RestfulApiCaller implements AppActions {
             List<Employees> employees;
             employees = xmlReader(conn.getInputStream());
             conn.disconnect();
-            if(employees.size() == 0)
+            if(employees.isEmpty())
             {
                 return null;
             }
             return employees.get(0);
         } catch (IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
 
         return null;
     }
 
+    /**
+     * Call the API and get the list of all the employees
+     * @return the list of employees
+     */
     @Override
     public List getEmployees() {
         try {
@@ -224,9 +258,8 @@ public class RestfulApiCaller implements AppActions {
             conn.disconnect();
             return employees;
         } catch (IOException ex) {
-            Logger.getLogger(RestfulApiCaller.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
-
         return null;
     }
 

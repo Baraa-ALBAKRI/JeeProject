@@ -9,8 +9,7 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 /**
- *
- * @author nicob
+ * ApplicationConfig class (auto generated)
  */
 @javax.ws.rs.ApplicationPath("webresources")
 public class ApplicationConfig extends Application {

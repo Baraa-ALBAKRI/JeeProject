@@ -16,6 +16,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+/**
+ * EmployeesFacadeREST class (auto generated)
+ */
 @Stateless
 @Path("entities.employees")
 public class EmployeesFacadeREST extends AbstractFacade<Employees> {
