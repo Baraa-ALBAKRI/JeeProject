@@ -6,7 +6,7 @@
 package lsi.m1.data;
 
 import java.util.ArrayList;
-import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.DBmodels.Employees;
 
 /** The principal actions between the application and the DB
  *
@@ -21,18 +21,18 @@ public interface AppActions {
      * 
      * @param e the employee to update
      */
-    void updateEmployee(EmployeeBean e);
+    void updateEmployee(Employees e);
     /** Insert employee in the DB
      * 
      * @param e the employee to insert
      */
-    void insertEmployee(EmployeeBean e);
+    void insertEmployee(Employees e);
     /** Get employee from the DB using its id
      * 
      * @param id the id of the employee
      * @return the employee 
      */
-    EmployeeBean getEmployee(int id);
+    Employees getEmployee(int id);
     /** Get the list of employees from the DB
      * 
      * @return the list from employees

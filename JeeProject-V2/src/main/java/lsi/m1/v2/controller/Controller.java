@@ -71,9 +71,11 @@ public class Controller extends HttpServlet {
                 }
                 //If no user can be logged, it displays an error message and goes back to the login page.
                 if (loggedUser == null) {
-                    session.removeAttribute("loginLevel");
-                    session.setAttribute("errKey", ERR_LOGIN);
-                    response.sendRedirect("login.jsp");
+                    if(!response.isCommitted()){
+                        session.removeAttribute("loginLevel");
+                        session.setAttribute("errKey", ERR_LOGIN);
+                        response.sendRedirect("login.jsp");
+                    }
                 } else {
                     //Otherwise, it displays the list of employees (redirection to employeeList.jsp
                     session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
@@ -94,9 +96,14 @@ public class Controller extends HttpServlet {
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             //If he selected an employee, it removes it and displays a completion message.
                             if (id > -1) {
-                                loggedAdmin.deleteEmployee(id, appActions);
-                                session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", SUPP_OK);
+                                if(loggedAdmin.deleteEmployee(id, appActions)){
+                                    session.setAttribute("selectStatusColor", "green");
+                                    session.setAttribute("selectStatus", SUPP_OK);
+                                }
+                                else{
+                                    session.setAttribute("selectStatusColor", "red");
+                                    session.setAttribute("selectStatus", SUPP_KO);
+                                }
                             } else {
                                 //Else it displays an error.
                                 session.setAttribute("selectStatusColor", "red");
@@ -112,18 +119,26 @@ public class Controller extends HttpServlet {
                             loggedAdmin = (LoggedAdmin) loggedUser;
                             //If he selected an employee, it displays it.
                             if (id > -1) {
-                                session.setAttribute("buttonValue", "Modifier");
-                                session.setAttribute("employe", loggedAdmin.getEmployee(id, appActions));
-                                session.removeAttribute("selectStatus");
-                                response.sendRedirect("employeeDetails.jsp");
+                                Employees e = loggedAdmin.getEmployee(id, appActions);
+                                if(e != null){
+                                    session.setAttribute("buttonValue", "Modifier");
+                                    session.setAttribute("employe", e);
+                                    session.removeAttribute("selectStatus");
+                                    response.sendRedirect("employeeDetails.jsp");
+                                }
+                                else{
+                                    session.setAttribute("selectStatus", ERR_DONT_EXIST);
+                                    session.setAttribute("selectStatusColor", "red");
+                                    session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
+                                    response.sendRedirect("employeesList.jsp");
+                                }
                             } else {
                                 //Else it displays an error message.
-                                session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("selectStatus", ERR_SELECT);
+                                session.setAttribute("selectStatusColor", "red");
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
                                 response.sendRedirect("employeesList.jsp");
                             }
-
                             break;
                         //The user wants to add an employee
                         case "Ajouter":
@@ -153,7 +168,7 @@ public class Controller extends HttpServlet {
                                     //Otherwise it displays an error message
                                     session.setAttribute("selectStatusColor", "red");
                                     session.setAttribute("selectStatus", FORM_KO);
-                                    session.removeAttribute("selectStatus");
+                                    session.removeAttribute("employe");
                                     response.sendRedirect("employeeDetails.jsp");
                                 }
                             } else {
@@ -183,10 +198,14 @@ public class Controller extends HttpServlet {
                             e.setMail(request.getParameter(MAIL_FRM));
                             //If the informations respect what we expect it inserts it and displays a completion message (on the refreshed list).
                             if (verifyInputForm(e)) {
-                                loggedAdmin.modifyEmployee(e, appActions);
+                                if(loggedAdmin.modifyEmployee(e, appActions)){
+                                    session.setAttribute("selectStatusColor", "green");
+                                    session.setAttribute("selectStatus", UPDT_OK);
+                                }else{
+                                    session.setAttribute("selectStatusColor", "red");
+                                    session.setAttribute("selectStatus", UPDT_KO);
+                                }
                                 session.setAttribute("employeesList", loggedUser.getEmployeesList(appActions));
-                                session.setAttribute("selectStatusColor", "green");
-                                session.setAttribute("selectStatus", UPDT_OK);
                                 response.sendRedirect("employeesList.jsp");
                             } else {
                                 //Otherwise it displays an error message

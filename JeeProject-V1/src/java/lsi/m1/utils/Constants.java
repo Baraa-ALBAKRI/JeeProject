@@ -10,14 +10,22 @@ package lsi.m1.utils;
  * @author nox
  */
 public class Constants {
+    /**Database URL*/
     public static final String URL = "jdbc:derby://localhost:1527/JEEPRJ";
+    /**Database user name*/
     public static final String USER_BDD = "jee";
+    /**Database password*/
     public static final String MDP_BDD = "jee";
-    public static final String Query_SELECT_ALL_EMPLOYEES = "SELECT * from EMPLOYEES";
-    public static final String Query_SELECT_ONE_EMPLOYEE = "SELECT * from EMPLOYEES WHERE ID = ?";
-    public static final String Query_DELETE_ONE_EMPLOYEE ="DELETE FROM EMPLOYEES WHERE ID = ?";
-    public static final String Query_UPDATE_ONE_EMPLOYEE ="UPDATE EMPLOYEES SET LASTNAME = ?, FIRSTNAME = ?, HOMEPHONE = ?, MOBILEPHONE = ?, WORKPHONE = ?, ADDRESS = ?, ZIPCODE = ?, CITY = ?, MAIL = ? WHERE ID = ?";
-    public static final String Query_ADD_ONE_EMPLOYEE ="INSERT INTO EMPLOYEES(LASTNAME, FIRSTNAME, HOMEPHONE, MOBILEPHONE, WORKPHONE, ADDRESS, ZIPCODE, CITY, MAIL) VALUES (?,?,?,?,?,?,?,?,?)";
+    /**Sql query to get the list of all the employees*/
+    public static final String QUERY_SELECT_ALL_EMPLOYEES = "SELECT * from EMPLOYEES";
+    /**Sql query to get one employee*/
+    public static final String QUERY_SELECT_ONE_EMPLOYEE = "SELECT * from EMPLOYEES WHERE ID = ?";
+    /**Sql query to delete one employee*/
+    public static final String QUERY_DELETE_ONE_EMPLOYEE ="DELETE FROM EMPLOYEES WHERE ID = ?";
+    /**Sql query to update the information of one employee*/
+    public static final String QUERY_UPDATE_ONE_EMPLOYEE ="UPDATE EMPLOYEES SET LASTNAME = ?, FIRSTNAME = ?, HOMEPHONE = ?, MOBILEPHONE = ?, WORKPHONE = ?, ADDRESS = ?, ZIPCODE = ?, CITY = ?, MAIL = ? WHERE ID = ?";
+    /**Sql query to add employee*/
+    public static final String QUERY_ADD_ONE_EMPLOYEE ="INSERT INTO EMPLOYEES(LASTNAME, FIRSTNAME, HOMEPHONE, MOBILEPHONE, WORKPHONE, ADDRESS, ZIPCODE, CITY, MAIL) VALUES (?,?,?,?,?,?,?,?,?)";
     /**Login input's name*/
     public static final String FRM_LOGIN = "loginForm";
     /**Password input's name*/
@@ -56,4 +64,10 @@ public class Constants {
     public static final String CITY_FRM =  "cityInput";
     /**ُEmployee form - mail input*/
     public static final String MAIL_FRM = "mailInput";
+    /**Error (employee don't exist) message*/
+    public static final String ERR_DONT_EXIST = "L'employé n'existe plus.";
+    /**Faild (modify) message*/
+    public static final String UPDT_KO =  "Modification échouée car l'employé n'existe plus.";
+    /**Faild (delete) message*/
+    public static final String SUPP_KO = "Suppression échouée car l'employé n'existe plus.";
 }

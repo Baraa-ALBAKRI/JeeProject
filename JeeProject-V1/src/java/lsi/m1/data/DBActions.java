@@ -10,46 +10,42 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lsi.m1.DBmodels.EmployeeBean;
+import lsi.m1.DBmodels.Employees;
+import lsi.m1.utils.AppException;
 import static lsi.m1.utils.Constants.*;
 
 /**
- *
- * @author nox
+ *DBActions represent all the possible actions to run on the database
  */
 public class DBActions implements AppActions{
 
     private Connection conn;
-    private Statement stmt;
     private ResultSet rs;
 
     public DBActions() {
         creerConn();
     }
-    
+    /**
+     * To create a new connection with the database if the application don't have already one
+     */
     private void creerConn()
     {
         try {
          if(this.conn==null)
              this.conn= DriverManager.getConnection(URL, USER_BDD, MDP_BDD);
-        } catch (SQLException sqle) {
-            Logger.getLogger(DBActions.class.getName()).log(Level.SEVERE, null, sqle);
+        } catch (SQLException ex) {
+            AppException.showMessageError(ex.toString());
         }
-    }
-
-    private Statement getStatement() {
-        try {
-            stmt = conn.createStatement();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return stmt;
     }
     
+    /**
+     * Add the list of parametres to the query
+     * @param req the query to execute on the database
+     * @param parametres the list of parametre
+     * @return the full query
+     * @throws SQLException 
+     */
     private PreparedStatement prepareStatement(String req, String... parametres) 
             throws SQLException{
         PreparedStatement pstmt = conn.prepareStatement(req);
@@ -60,28 +56,29 @@ public class DBActions implements AppActions{
         return pstmt;    
     }
     
-    
-    public void runQuery(String req, String... parametres) {
-        try{
+    /**
+     * Execute a query with a list of parametres(or without any parametres)
+     * @param req the query
+     * @param parametres the list of parametres
+     * @throws SQLException 
+     */
+    public void runQuery(String req, String... parametres) throws SQLException {
             creerConn();
             PreparedStatement pstmt = prepareStatement(req, parametres);
             pstmt.execute();
-        }
-        catch (SQLException sqle) {
-            Logger.getLogger(DBActions.class.getName()).log(Level.SEVERE, null, sqle);
-        }
     }
 
-    public ResultSet getResultSet(String req, String... parametres) {
-        try{
-            creerConn();
-            PreparedStatement pstmt = prepareStatement(req, parametres);
-            return pstmt.executeQuery();
-        }
-        catch (SQLException sqle) {
-            Logger.getLogger(DBActions.class.getName()).log(Level.SEVERE, null, sqle);
-        }
-        return null;
+    /**
+     * Execute a query with a list of parametres(or without any parametres)
+     * @param req the query
+     * @param parametres the list of parametres
+     * @return the result of the execution
+     * @throws SQLException 
+     */
+    public ResultSet getResultSet(String req, String... parametres) throws SQLException {
+        creerConn();
+        PreparedStatement pstmt = prepareStatement(req, parametres);
+        return pstmt.executeQuery();
     }
 
     /**Searches for a single employee in DB.
@@ -90,12 +87,12 @@ public class DBActions implements AppActions{
      * @return an instance of Employees if it exists in the DB, null if not.
      */
     @Override
-    public EmployeeBean getEmployee(int id) {
-        rs = this.getResultSet(Query_SELECT_ONE_EMPLOYEE, Integer.toString(id));
-         try {
+    public Employees getEmployee(int id) {
+        try {
+            rs = this.getResultSet(QUERY_SELECT_ONE_EMPLOYEE, Integer.toString(id));
             if(rs.next())
             {
-                EmployeeBean e = new EmployeeBean();
+                Employees e = new Employees();
                 e.setId(rs.getInt("ID"));
                 e.setLastName(rs.getString("LASTNAME"));
                 e.setFirstName(rs.getString("FIRSTNAME"));
@@ -111,7 +108,7 @@ public class DBActions implements AppActions{
             else
                 return null;
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeBean.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
          return null;
     }
@@ -122,12 +119,12 @@ public class DBActions implements AppActions{
      */
     @Override
     public ArrayList getEmployees() {
-        ArrayList<EmployeeBean> employeesList;
+        ArrayList<Employees> employeesList;
         employeesList = new ArrayList<>();
-        rs = this.getResultSet(Query_SELECT_ALL_EMPLOYEES);
         try {
+            rs = this.getResultSet(QUERY_SELECT_ALL_EMPLOYEES);
             while (rs.next()) {
-                EmployeeBean e = new EmployeeBean();
+                Employees e = new Employees();
                 e.setId(rs.getInt("ID"));
                 e.setLastName(rs.getString("LASTNAME"));
                 e.setFirstName(rs.getString("FIRSTNAME"));
@@ -142,7 +139,7 @@ public class DBActions implements AppActions{
             }
             return employeesList;
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeBean.class.getName()).log(Level.SEVERE, null, ex);
+            AppException.showMessageError(ex.toString());
         }
         return null;
     }
@@ -153,7 +150,11 @@ public class DBActions implements AppActions{
      */
     @Override
     public void deleteEmployee(int id) {
-        runQuery(Query_DELETE_ONE_EMPLOYEE, Integer.toString(id));
+        try {
+            runQuery(QUERY_DELETE_ONE_EMPLOYEE, Integer.toString(id));
+        } catch (SQLException ex) {
+            AppException.showMessageError(ex.toString());
+        }
     }
 
     /**Updates the informations of a given employee in DB.
@@ -161,10 +162,14 @@ public class DBActions implements AppActions{
      * @param e reprensents an employeeBean.
      */
     @Override
-    public void updateEmployee(EmployeeBean e) {
-        runQuery(Query_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
-                , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
-                , e.getCity(), e.getMail(), Integer.toString(e.getId()));
+    public void updateEmployee(Employees e) {
+        try {
+            runQuery(QUERY_UPDATE_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
+                    , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
+                    , e.getCity(), e.getMail(), Integer.toString(e.getId()));
+        } catch (SQLException ex) {
+            AppException.showMessageError(ex.toString());
+        }
     }
     
     /**Inserts a new employee in DB.
@@ -172,10 +177,14 @@ public class DBActions implements AppActions{
      * @param e reprensents an employeeBean.
      */
     @Override
-    public void insertEmployee(EmployeeBean e) {
-        runQuery(Query_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
-                , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
-                , e.getCity(), e.getMail());
+    public void insertEmployee(Employees e) {
+        try {
+            runQuery(QUERY_ADD_ONE_EMPLOYEE, e.getLastName(), e.getFirstName(), e.getHomePhone()
+                    , e.getMobilePhone(), e.getWorkPhone(), e.getAddress(), e.getZipCode()
+                    , e.getCity(), e.getMail());
+        } catch (SQLException ex) {
+            AppException.showMessageError(ex.toString());
+        }
     }
 
 }
