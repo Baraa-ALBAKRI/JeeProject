@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * EmployeesFacadeREST class (auto generated)
+ * In this class, you can find all the possible API call of our application
  */
 @Stateless
 @Path("entities.employees")
@@ -30,6 +31,10 @@ public class EmployeesFacadeREST extends AbstractFacade<Employees> {
         super(Employees.class);
     }
 
+    /**
+     * Create a new employee
+     * @param entity the employee to create 
+     */
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -37,6 +42,11 @@ public class EmployeesFacadeREST extends AbstractFacade<Employees> {
         super.create(entity);
     }
 
+    /**
+     * Modify an employee
+     * @param id the id of the employee
+     * @param entity his new informations
+     */
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -44,12 +54,21 @@ public class EmployeesFacadeREST extends AbstractFacade<Employees> {
         super.edit(entity);
     }
 
+    /**
+     * Delete an employee
+     * @param id the id of the employee
+     */
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
 
+    /**
+     * Get the informations of one employee
+     * @param id the id of the employee
+     * @return the employee
+     */
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -57,6 +76,10 @@ public class EmployeesFacadeREST extends AbstractFacade<Employees> {
         return super.find(id);
     }
 
+    /**
+     * Get the informations of all the employees
+     * @return the employees
+     */
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -64,6 +87,12 @@ public class EmployeesFacadeREST extends AbstractFacade<Employees> {
         return super.findAll();
     }
 
+    /**
+     * Get a part of the employees
+     * @param from 
+     * @param to
+     * @return the employees
+     */
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -71,6 +100,10 @@ public class EmployeesFacadeREST extends AbstractFacade<Employees> {
         return super.findRange(new int[]{from, to});
     }
 
+    /**
+     * Get the total number of employees
+     * @return the number of employees
+     */
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
